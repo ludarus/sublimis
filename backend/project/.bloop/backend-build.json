@@ -2,15 +2,15 @@
     "version": "1.4.0",
     "project": {
         "name": "backend-build",
-        "directory": "/home/joe/projects/site/backend/project",
-        "workspaceDir": "/home/joe/projects/site/backend/project",
+        "directory": "/home/joe/projects/sublimis/backend/project",
+        "workspaceDir": "/home/joe/projects/sublimis/backend/project",
         "sources": [
-            "/home/joe/projects/site/backend/project/src/main/scala",
-            "/home/joe/projects/site/backend/project/src/main/scala-2.12",
-            "/home/joe/projects/site/backend/project/src/main/scala-2",
-            "/home/joe/projects/site/backend/project/src/main/java",
-            "/home/joe/projects/site/backend/project/src/main/scala-sbt-1.0",
-            "/home/joe/projects/site/backend/project/target/scala-2.12/sbt-1.0/src_managed/main"
+            "/home/joe/projects/sublimis/backend/project/src/main/scala",
+            "/home/joe/projects/sublimis/backend/project/src/main/scala-2.12",
+            "/home/joe/projects/sublimis/backend/project/src/main/scala-2",
+            "/home/joe/projects/sublimis/backend/project/src/main/java",
+            "/home/joe/projects/sublimis/backend/project/src/main/scala-sbt-1.0",
+            "/home/joe/projects/sublimis/backend/project/target/scala-2.12/sbt-1.0/src_managed/main"
         ],
         "dependencies": [
             
@@ -159,11 +159,11 @@
             "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/org/slf4j/jcl-over-slf4j/1.7.30/jcl-over-slf4j-1.7.30.jar",
             "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/sourcecode_2.12/0.4.2/sourcecode_2.12-0.4.2.jar"
         ],
-        "out": "/home/joe/projects/site/backend/project/.bloop/backend-build",
-        "classesDir": "/home/joe/projects/site/backend/project/.bloop/backend-build/scala-2.12/sbt-1.0/classes",
+        "out": "/home/joe/projects/sublimis/backend/project/.bloop/backend-build",
+        "classesDir": "/home/joe/projects/sublimis/backend/project/.bloop/backend-build/scala-2.12/sbt-1.0/classes",
         "resources": [
-            "/home/joe/projects/site/backend/project/src/main/resources",
-            "/home/joe/projects/site/backend/project/target/scala-2.12/sbt-1.0/resource_managed/main"
+            "/home/joe/projects/sublimis/backend/project/src/main/resources",
+            "/home/joe/projects/sublimis/backend/project/target/scala-2.12/sbt-1.0/resource_managed/main"
         ],
         "scala": {
             "organization": "org.scala-lang",
@@ -268,22 +268,22 @@
         "platform": {
             "name": "jvm",
             "config": {
-                "home": "/usr/lib/jvm/java-25-openjdk",
+                "home": "/usr/lib/jvm/java-26-openjdk",
                 "options": [
-                    "-Duser.dir=/home/joe/projects/site/backend/project"
+                    "-Duser.dir=/home/joe/projects/sublimis/backend/project"
                 ]
             },
             "mainClass": [
                 
             ],
             "runtimeConfig": {
-                "home": "/usr/lib/jvm/java-25-openjdk",
+                "home": "/usr/lib/jvm/java-26-openjdk",
                 "options": [
-                    "-Duser.dir=/home/joe/projects/site/backend/project"
+                    "-Duser.dir=/home/joe/projects/sublimis/backend/project"
                 ]
             },
             "classpath": [
-                "/home/joe/projects/site/backend/project/.bloop/backend-build/scala-2.12/sbt-1.0/classes",
+                "/home/joe/projects/sublimis/backend/project/.bloop/backend-build/scala-2.12/sbt-1.0/classes",
                 "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/sbt-bloop_2.12_1.0/2.0.9/sbt-bloop_2.12_1.0-2.0.9.jar",
                 "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/org/playframework/sbt-plugin_2.12_1.0/3.0.10/sbt-plugin_2.12_1.0-3.0.10.jar",
                 "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/org/foundweekends/giter8/sbt-giter8-scaffold_2.12_1.0/0.18.0/sbt-giter8-scaffold_2.12_1.0-0.18.0.jar",

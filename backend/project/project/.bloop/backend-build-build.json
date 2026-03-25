@@ -2,15 +2,15 @@
     "version": "1.4.0",
     "project": {
         "name": "backend-build-build",
-        "directory": "/home/joe/projects/site/backend/project/project",
-        "workspaceDir": "/home/joe/projects/site/backend/project/project",
+        "directory": "/home/joe/projects/sublimis/backend/project/project",
+        "workspaceDir": "/home/joe/projects/sublimis/backend/project/project",
         "sources": [
-            "/home/joe/projects/site/backend/project/project/src/main/scala",
-            "/home/joe/projects/site/backend/project/project/src/main/scala-2.12",
-            "/home/joe/projects/site/backend/project/project/src/main/scala-2",
-            "/home/joe/projects/site/backend/project/project/src/main/java",
-            "/home/joe/projects/site/backend/project/project/src/main/scala-sbt-1.0",
-            "/home/joe/projects/site/backend/project/project/target/scala-2.12/sbt-1.0/src_managed/main"
+            "/home/joe/projects/sublimis/backend/project/project/src/main/scala",
+            "/home/joe/projects/sublimis/backend/project/project/src/main/scala-2.12",
+            "/home/joe/projects/sublimis/backend/project/project/src/main/scala-2",
+            "/home/joe/projects/sublimis/backend/project/project/src/main/java",
+            "/home/joe/projects/sublimis/backend/project/project/src/main/scala-sbt-1.0",
+            "/home/joe/projects/sublimis/backend/project/project/target/scala-2.12/sbt-1.0/src_managed/main"
         ],
         "dependencies": [
             
@@ -104,11 +104,11 @@
             "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/net/java/dev/jna/jna-platform/5.12.0/jna-platform-5.12.0.jar",
             "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.4.2/config-1.4.2.jar"
         ],
-        "out": "/home/joe/projects/site/backend/project/project/.bloop/backend-build-build",
-        "classesDir": "/home/joe/projects/site/backend/project/project/.bloop/backend-build-build/scala-2.12/sbt-1.0/classes",
+        "out": "/home/joe/projects/sublimis/backend/project/project/.bloop/backend-build-build",
+        "classesDir": "/home/joe/projects/sublimis/backend/project/project/.bloop/backend-build-build/scala-2.12/sbt-1.0/classes",
         "resources": [
-            "/home/joe/projects/site/backend/project/project/src/main/resources",
-            "/home/joe/projects/site/backend/project/project/target/scala-2.12/sbt-1.0/resource_managed/main"
+            "/home/joe/projects/sublimis/backend/project/project/src/main/resources",
+            "/home/joe/projects/sublimis/backend/project/project/target/scala-2.12/sbt-1.0/resource_managed/main"
         ],
         "scala": {
             "organization": "org.scala-lang",
@@ -214,22 +214,22 @@
         "platform": {
             "name": "jvm",
             "config": {
-                "home": "/usr/lib/jvm/java-25-openjdk",
+                "home": "/usr/lib/jvm/java-26-openjdk",
                 "options": [
-                    "-Duser.dir=/home/joe/projects/site/backend/project/project"
+                    "-Duser.dir=/home/joe/projects/sublimis/backend/project/project"
                 ]
             },
             "mainClass": [
                 
             ],
             "runtimeConfig": {
-                "home": "/usr/lib/jvm/java-25-openjdk",
+                "home": "/usr/lib/jvm/java-26-openjdk",
                 "options": [
-                    "-Duser.dir=/home/joe/projects/site/backend/project/project"
+                    "-Duser.dir=/home/joe/projects/sublimis/backend/project/project"
                 ]
             },
             "classpath": [
-                "/home/joe/projects/site/backend/project/project/.bloop/backend-build-build/scala-2.12/sbt-1.0/classes",
+                "/home/joe/projects/sublimis/backend/project/project/.bloop/backend-build-build/scala-2.12/sbt-1.0/classes",
                 "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/sbt-bloop_2.12_1.0/2.0.9/sbt-bloop_2.12_1.0-2.0.9.jar",
                 "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/bloop-config_2.12/2.3.2/bloop-config_2.12-2.3.2.jar",
                 "/home/joe/.cache/coursier/v1/https/repo1.maven.org/maven2/com/github/plokhotnyuk/jsoniter-scala/jsoniter-scala-core_2.12/2.13.5.2/jsoniter-scala-core_2.12-2.13.5.2.jar",
