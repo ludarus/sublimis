@@ -14,6 +14,8 @@ GET /test controllers.BasicController.usefulResponse()
 
 GET /test1 controllers.BasicController.returnJson()
 
+GET /db controllers.BasicController.callDb()
+
 GET / controllers.BasicController.index()
 
 GET /home controllers.BasicController.notDone()

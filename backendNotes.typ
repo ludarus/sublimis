@@ -46,3 +46,21 @@ _basic backend model_
     - CONNECT
     - TRACE
 
+
+_fast forward a few days_
+
+*Accessing the database from PLAY*
+- options
+  - JDBC
+    - lowest level of abstraction
+    - base library for db access in java + derivative languages
+    - raw SQL
+  - slick
+    - functional relational mapping library 
+    - strongly typed
+    - has play integration 
+  - doobie
+    - pure functional layer
+    - low level esque 
+
+- im going to use  *JDBC* because its raw sql and i should learn how to query sql and stuff

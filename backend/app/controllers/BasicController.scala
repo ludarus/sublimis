@@ -4,14 +4,21 @@ import javax.inject.Inject
 import play.api.mvc.Action
 import play.api.mvc._
 import play.api.libs.json.Json
+import java.sql.Array
 import play.api.http.HttpEntity
 import org.apache.pekko.util.ByteString
+import database.ScalaJdbcConnection
+import org.apache.pekko.util.Helpers.Requiring
 
-class BasicController @Inject() (cc: ControllerComponents) extends AbstractController(cc){
+class BasicController @Inject() (
+    cc: ControllerComponents,
+    db: ScalaJdbcConnection
+) extends AbstractController(cc) {
 
-implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
-  //common server results:
-  //val ok            = Ok("Hello world!")
+  implicit val ec: scala.concurrent.ExecutionContext =
+    scala.concurrent.ExecutionContext.global
+  // common server results:
+  // val ok            = Ok("Hello world!")
   // val notFound     = NotFound
   // val pageNotFound = NotFound(<h1>Page not found</h1>)
   // val badRequest   = BadRequest(views.html.form(formWithErrors))
@@ -28,33 +35,43 @@ implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionC
     //   body = HttpEntity.Strict(ByteString("server is enabled."), Some("text/plain"))
     //
     // )
-    
-    Ok(<h1>lalalalal</h1>).as(HTML).withCookies(Cookie("lalalaCookie", "p")).bakeCookies()
+
+    Ok(<h1>lalalalal</h1>)
+      .as(HTML)
+      .withCookies(Cookie("lalalaCookie", "p"))
+      .bakeCookies()
 
   }
 
   def usefulResponse() = Action {
-
+    printf("Fuchk you")
     Ok(
-
       Json.obj(
-          "skibidi" -> "rizz",
-          "ohio" -> 3,
-          "num" -> 69
-        )
-
+        "skibidi" -> "rizz",
+        "ohio" -> 3,
+        "num" -> 69
       )
+    )
   }
 
-  def returnJson() = Action{
+  def returnJson() = Action {
     Ok.sendFile(new java.io.File("./public/json/test.json"))
   }
-  //todo site
+
+  // todo site
   def notDone() = TODO
-  
-  def fullRedirect(name: String) = Action{
+
+  def fullRedirect(name: String) = Action {
     Redirect("/")
   }
 
-  
+  def callDb() = Action.async {
+    db.getAmount().map {
+      case Some(poo) => {
+        Ok(poo)
+      }
+      case None => NotFound("not found")
+    }
+  }
+
 }
