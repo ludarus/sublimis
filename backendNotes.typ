@@ -64,3 +64,7 @@ _fast forward a few days_
     - low level esque 
 
 - im going to use  *JDBC* because its raw sql and i should learn how to query sql and stuff
+
+_a few days later_
+
+*HTTP Methods*

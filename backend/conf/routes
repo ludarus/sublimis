@@ -6,6 +6,12 @@
 # GET     /                           controllers.HomeController.index()
 
 # Map static resources from the /public folder to the /assets URL path
+
+
+POST /dump controllers.BasicController.thing()
+
+POST /googleAuth	controllers.BasicController.signinVerification()
+
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 GET /yt controllers.Default.redirect(to = "https://youtube.com/@burgermanjoe")
@@ -13,8 +19,6 @@ GET /yt controllers.Default.redirect(to = "https://youtube.com/@burgermanjoe")
 GET /test controllers.BasicController.usefulResponse()
 
 GET /test1 controllers.BasicController.returnJson()
-
-GET /db controllers.BasicController.callDb()
 
 GET / controllers.BasicController.index()
 

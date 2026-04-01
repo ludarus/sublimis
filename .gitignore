@@ -11,6 +11,7 @@ backend/.bloop/
 backend/.metals/
 # Logs
 frontend/logs
+frontend/.env
 *.log
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
