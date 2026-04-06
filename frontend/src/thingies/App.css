@@ -1,0 +1,14 @@
+/* format: */
+
+/* .className { */
+/* 	attribute=x; */
+/* } */
+
+/* # for id, . for class */
+/* ids can only be used once */
+
+.idiot {
+	display: flex;
+	height: 100vh;
+	width: 100vw;
+}

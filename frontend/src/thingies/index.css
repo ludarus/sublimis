@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+.fondamento-regular {
+	font-family: "Fondamento", cursive;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.fondamento-regular-italic {
+	font-family: "Fondamento", cursive;
+	font-weight: 400;
+	font-style: italic;
+}
+
+/* <weight>: Use a value from 400 to 800 */
+/* <uniquifier>: Use a unique and descriptive class name */
+
+:root {
+	--background: #D7DAE5;
+	--text-colour: #1c1103;
+	--accent-bg: #B9CDDA;
+	--alt-accent: #352208;
+	--alt-accent-secondary: #7B6B43;
+	--alt-accent-outline: #685634;
+	--fancy-font: "Fondamento";
+	--normal-font: "EB Garamond";
+}
+
+body {
+	background-color: var(--background);
+	color: var(--text-colour);
+	font-family: var(--normal-font), cursive;
+	font-weight: 600;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	width: 100vw;
+	margin: 0%;
+	overflow: hidden;
+}
+
+nav {
+	display: flex;
+	flex-direction: row;
+}
+
+main {
+	display: flex;
+	flex-grow: 1;
+	width: 100vw;
+}
+
+h1 {
+	font-family: var(--fancy-font);
+	font-size: 2em;
+}
+
+
+p {
+	font-size: 1em;
+}

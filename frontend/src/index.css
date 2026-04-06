@@ -24,6 +24,9 @@
 	--alt-accent-outline: #685634;
 	--fancy-font: "Fondamento";
 	--normal-font: "EB Garamond";
+}
+
+body {
 	background-color: var(--background);
 	color: var(--text-colour);
 	font-family: var(--normal-font), cursive;
@@ -32,5 +35,5 @@
 
 h1 {
 	font-family: var(--fancy-font);
-	font-size: 2em;
+	font-size: 1.75em;
 }

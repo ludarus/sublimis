@@ -105,7 +105,12 @@ class BasicController @Inject() (
           f.map { value =>
             val sessionid = value
             println("sessionid = " + sessionid.toString)
-            Created("verified and created sessionid")
+            Created(Json.obj(
+              "message" -> "verified",
+              "status" -> "ok",
+              "name" -> payload.get("name").toString,
+              "email" -> payload.getEmail
+              ))
               .withCookies(
                 Cookie(
                   name = "session_id",

@@ -10,6 +10,7 @@
 
 POST /dump controllers.BasicController.thing()
 
++nocsrf
 POST /googleAuth	controllers.BasicController.signinVerification()
 
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

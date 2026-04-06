@@ -6,7 +6,6 @@ version := "1.0-SNAPSHOT"
 libraryDependencies += filters
 libraryDependencies += jdbc
 
-play.filters.enabled += "play.filters.csrf.CSRFFilter"
 
 // build.sbt
 
