@@ -26,6 +26,12 @@
 	--normal-font: "EB Garamond";
 }
 
+/* change this later because it looks so freaking ugly */
+::selection {
+	background-color: rgba(53, 34, 8, 0.8);
+	color: var(--background);
+}
+
 body {
 	background-color: var(--background);
 	color: var(--text-colour);

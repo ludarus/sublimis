@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { GoogleOAuthProvider, GoogleLogin, type CredentialResponse } from '@react-oauth/google'
 import './App.css'
-import PostButton from './Functions.tsx'
+import PostButton from './thingies/Functions.tsxx'
 
 function App() {
 	const [userInfo, setInfo] = useState(null)
