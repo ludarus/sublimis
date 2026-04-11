@@ -44,6 +44,8 @@ class BasicController @Inject() (
     .setAudience(Collections.singletonList(clientId))
     .build();
 
+
+    //======================== CONTROLLER METHODS =======================================
   def index() = Action {
     // result is a struct like class that packages the header and body into the correct return type for action
     // remember that in scala, the last expression of a function is it's return value
@@ -82,8 +84,41 @@ class BasicController @Inject() (
     Redirect("/")
   }
 
+  def giveUserInfo() = Action {
+    println("giving")
+    Ok("fucks")
+  }
+
+  def testRecieve() = Action.async { request =>
+    println("post recieved")
+
+    request.cookies.get("session_id") match {
+      case Some(sid) =>
+        println("sessionid recieved: " + sid.toString())
+        val c = db.verifySid(sid.value)
+
+        c.map { option =>
+          option match {
+            case Some(usr) =>
+              println("user found " + usr.name)
+              Created(
+                usr.getJson()
+              )
+            case None =>
+              println("user not found")
+              BadRequest("failed to verify")
+          }
+        }
+      case None =>
+        println("no cookie sent")
+        Future.successful(BadRequest("no cookie sent"))
+    }
+
+  }
+
   def signinVerification() = Action.async { request =>
     println("connection recieved")
+    println(request.cookies.toString())
     // getting main token thing
     val credential = (request.body.asJson.get \ "credential").asOpt[String];
     credential match {
@@ -105,12 +140,13 @@ class BasicController @Inject() (
           f.map { value =>
             val sessionid = value
             println("sessionid = " + sessionid.toString)
-            Created(Json.obj(
-              "message" -> "verified",
-              "status" -> "ok",
-              "name" -> payload.get("name").toString,
-              "email" -> payload.getEmail
-              ))
+            Created(
+              Json.obj(
+                "name" -> payload.get("name").toString,
+                "email" -> payload.getEmail,
+                "picture" -> payload.get("picture").toString
+              )
+            )
               .withCookies(
                 Cookie(
                   name = "session_id",

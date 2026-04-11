@@ -8,6 +8,7 @@ import play.api.db.Database
 import java.sql.Connection
 import java.sql.Timestamp
 import database.DatabaseExecutionContext
+import custom.SublimisUser
 
 // @inject just makes play create instances of the constructor parameters
 class ScalaJdbcConnection @Inject() (
@@ -15,16 +16,86 @@ class ScalaJdbcConnection @Inject() (
     databaseExecutionContext: DatabaseExecutionContext
 ) {
 
+  private val selectFromSession = """
+      SELECT * FROM sessions WHERE sessionid = ?
+      """
+  private val selectFromGUsers = """
+      SELECT * FROM googleusers WHERE id = ?
+  """
+
+  def verifySid(sid: String): Future[Option[SublimisUser]] = {
+    Future {
+      // getting googleusers info and sessions info witha  join query
+      val joinqry = """
+        SELECT 
+        s.*,
+        g.*
+        FROM sessions s
+        JOIN googleusers g 
+          ON g.id = s.userid
+        WHERE s.sessionid = ?
+      """
+      val connection = db.getConnection()
+      val findStmnt = connection.prepareStatement(joinqry)
+      findStmnt.setObject(1, UUID.fromString(sid))
+
+      println(findStmnt.toString())
+      val userRes = findStmnt.executeQuery()
+      println("querey executed")
+      if (
+        userRes.next() &&
+        userRes
+          .getTimestamp("expires")
+          .after(new Timestamp(System.currentTimeMillis()))
+      ) {
+        println("thing is not expired")
+        // incrementing expiry date for rolling usage
+        incrementExpiry(connection, sid)
+
+        // returning a userclass with relevant info
+        val usr = new SublimisUser(
+          sid,
+          userRes.getString("email"),
+          userRes.getString("name"),
+          userRes.getString("img")
+        )
+        Some(usr)
+      } else {
+        println("invalid sid")
+        None
+      }
+    }(databaseExecutionContext)
+  }
+
+  def incrementExpiry(con: Connection, sid: String): Int = {
+    // incrementing the expiry date of sessionid so that the user doesn't randomly get logged out
+    val qry = """
+        UPDATE sessions 
+          SET expires = ?
+        WHERE sessionid = ?
+        """
+
+    val updateStmnt = con.prepareStatement(qry)
+    updateStmnt.setTimestamp(
+      1,
+      new Timestamp(System.currentTimeMillis + 1800000)
+    )
+    updateStmnt.setObject(2, UUID.fromString(sid))
+    val res = updateStmnt.executeUpdate()
+    updateStmnt.close()
+
+    println("incremented expiry date of session")
+
+    res
+  }
+
   // updates the user in DB, verifies token, generates sessionID
+  // I have to refactor this beacuse the function is too long i think
   def handleUser(payload: Payload): Future[UUID] = {
     Future {
       val connection = db.getConnection()
       // see if there's already an entry for user
-      val findQuerey = """
-      SELECT * FROM googleusers WHERE id = ?
-      """
-
-      val findStmnt = connection.prepareStatement(findQuerey)
+      val findStmnt = connection.prepareStatement(selectFromGUsers)
       findStmnt.setString(1, payload.getSubject())
       val usrExistsRes = findStmnt.executeQuery()
       val sessionid = generateSessionId(connection)
@@ -39,7 +110,8 @@ class ScalaJdbcConnection @Inject() (
             familyname = ?,
             givenname = ?,
             email_verified = ?,
-            locale = ?
+            locale = ?,
+            img = ?
         WHERE id = ?
         """
         println(payload.getSubject())
@@ -58,7 +130,8 @@ class ScalaJdbcConnection @Inject() (
           if (payload.get("locale") == null) { "" }
           else { payload.get("locale").toString }
         )
-        prpStmnt.setString(7, payload.getSubject())
+        prpStmnt.setString(7, payload.get("picture").toString)
+        prpStmnt.setString(8, payload.getSubject())
 
         prpStmnt.executeUpdate()
         println("sucessfully updated user")
@@ -96,8 +169,8 @@ class ScalaJdbcConnection @Inject() (
 
         val sql = """
         INSERT INTO googleusers
-        (id, email, name, familyname, givenname, email_verified, locale)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        (id, email, name, familyname, givenname, email_verified, locale, img)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """
 
         val prpStmnt = connection.prepareStatement(sql)
@@ -115,6 +188,7 @@ class ScalaJdbcConnection @Inject() (
           if (payload.get("locale") == null) { "" }
           else { payload.get("locale").toString }
         )
+        prpStmnt.setString(8, payload.get("picture").toString())
 
         prpStmnt.executeUpdate()
         println("sucessfully added new user")
@@ -151,9 +225,7 @@ class ScalaJdbcConnection @Inject() (
 
   def generateSessionId(connection: Connection): UUID = {
     var testRes = true
-    val testStmnt = connection.prepareStatement("""
-        SELECT * FROM sessions WHERE sessionid = ?
-        """)
+    val testStmnt = connection.prepareStatement(selectFromSession)
     var sessionid = UUID.randomUUID()
     while (testRes) {
       sessionid = UUID.randomUUID()

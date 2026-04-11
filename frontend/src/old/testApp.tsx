@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { GoogleOAuthProvider, GoogleLogin, type CredentialResponse } from '@react-oauth/google'
 import './App.css'
-import PostButton from './thingies/Functions.tsxx'
 
 function App() {
 	const [userInfo, setInfo] = useState(null)
@@ -14,7 +13,6 @@ function App() {
 					This is is the sample text for Project sublimis, a DND hosting platform.
 				</p>
 				<br />
-				<PostButton />
 				<br />
 				<div className="google-login-wrapper">
 					<GoogleLogin
