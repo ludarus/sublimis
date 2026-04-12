@@ -44,8 +44,7 @@ class BasicController @Inject() (
     .setAudience(Collections.singletonList(clientId))
     .build();
 
-
-    //======================== CONTROLLER METHODS =======================================
+  // ======================== CONTROLLER METHODS =======================================
   def index() = Action {
     // result is a struct like class that packages the header and body into the correct return type for action
     // remember that in scala, the last expression of a function is it's return value
@@ -84,9 +83,29 @@ class BasicController @Inject() (
     Redirect("/")
   }
 
-  def giveUserInfo() = Action {
-    println("giving")
-    Ok("fucks")
+  def giveUserInfo() = Action.async { request =>
+    println("here is the requersdt " + request.toString())
+    request.cookies.get("session_id") match {
+      case Some(sid) =>
+        println("sessionid recieved: " + sid.toString())
+        val c = db.verifySid(sid.value)
+
+        c.map { option =>
+          option match {
+            case Some(usr) =>
+              println("user found " + usr.name)
+              Created(
+                usr.getJson()
+              )
+            case None =>
+              println("user not found")
+              BadRequest("failed to verify")
+          }
+        }
+      case None =>
+        println("no cookie sent")
+        Future.successful(BadRequest("no cookie sent"))
+    }
   }
 
   def testRecieve() = Action.async { request =>
@@ -137,20 +156,15 @@ class BasicController @Inject() (
           println("updaing usr")
           val f = db.handleUser(payload)
 
-          f.map { value =>
-            val sessionid = value
-            println("sessionid = " + sessionid.toString)
+          f.map { usr =>
+            println("usr = " + usr.toString)
             Created(
-              Json.obj(
-                "name" -> payload.get("name").toString,
-                "email" -> payload.getEmail,
-                "picture" -> payload.get("picture").toString
-              )
+              usr.getJson()
             )
               .withCookies(
                 Cookie(
                   name = "session_id",
-                  value = sessionid.toString,
+                  value = usr.sessionid,
                   httpOnly = true,
                   secure = true
                 )

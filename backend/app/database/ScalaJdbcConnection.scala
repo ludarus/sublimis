@@ -59,9 +59,13 @@ class ScalaJdbcConnection @Inject() (
           userRes.getString("name"),
           userRes.getString("img")
         )
+        findStmnt.close()
+        connection.close()
         Some(usr)
       } else {
         println("invalid sid")
+        findStmnt.close()
+        connection.close()
         None
       }
     }(databaseExecutionContext)
@@ -91,7 +95,8 @@ class ScalaJdbcConnection @Inject() (
 
   // updates the user in DB, verifies token, generates sessionID
   // I have to refactor this beacuse the function is too long i think
-  def handleUser(payload: Payload): Future[UUID] = {
+  // takes oauth id and updates/adds user in db, returns a struct/class containing user info to return to frontend
+  def handleUser(payload: Payload): Future[SublimisUser] = {
     Future {
       val connection = db.getConnection()
       // see if there's already an entry for user
@@ -218,8 +223,12 @@ class ScalaJdbcConnection @Inject() (
         println("sucessfully added new usr to sessions")
         ssnStmnt.close()
       }
-
-      sessionid
+      new SublimisUser(
+        sessionid.toString(),
+        payload.getEmail(),
+        payload.get("name").toString(),
+        payload.get("picture").toString()
+      )
     }(databaseExecutionContext)
   }
 
