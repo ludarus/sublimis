@@ -106,7 +106,9 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 						{TestGet()}
 					</div >
 					<div className='dropdown-element' >
-						<p>dropdown thing</p>
+						<a href='ws'>
+							websocket testing
+						</a>
 					</div >
 					<div className='dropdown-element' >
 						<p>dropdown thing</p>

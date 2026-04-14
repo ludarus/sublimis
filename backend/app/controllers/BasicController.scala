@@ -1,5 +1,11 @@
 package controllers
 
+import org.apache.pekko.stream.scaladsl._
+import websocket.MyWebSocketActor
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
+import play.api.libs.streams.ActorFlow
+import play.api.mvc._
 import java.util.UUID
 import java.util.Collections
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
@@ -26,6 +32,9 @@ class BasicController @Inject() (
     cc: ControllerComponents,
     db: ScalaJdbcConnection,
     config: Configuration
+)(implicit
+    system: ActorSystem,
+    mat: Materializer
 ) extends AbstractController(cc) {
 
   implicit val ec: scala.concurrent.ExecutionContext =
@@ -44,7 +53,7 @@ class BasicController @Inject() (
     .setAudience(Collections.singletonList(clientId))
     .build();
 
-  // ======================== CONTROLLER METHODS =======================================
+  // ======================== ACTION CONTROLLER METHODS =======================================
   def index() = Action {
     // result is a struct like class that packages the header and body into the correct return type for action
     // remember that in scala, the last expression of a function is it's return value
@@ -54,17 +63,6 @@ class BasicController @Inject() (
       .withCookies(Cookie("lalalaCookie", "p"))
       .bakeCookies()
 
-  }
-
-  def usefulResponse() = Action {
-    printf("Fuchk you")
-    Ok(
-      Json.obj(
-        "skibidi" -> "rizz",
-        "ohio" -> 3,
-        "num" -> 69
-      )
-    )
   }
 
   def returnJson() = Action {
@@ -186,4 +184,21 @@ class BasicController @Inject() (
         Future.successful(BadRequest("missing cred"))
     }
   }
+  // ======================== WEBSOCKET CONTROLLER METHODS =======================================
+
+  // def socket = WebSocket.accept[String, String] { request =>
+  //   println("connection activated")
+  //   // log the message to stdout and send response back to client
+  //   Flow[String].map { msg =>
+  //     println(msg)
+  //     "I received your message: " + msg
+  //   }
+  // }
+
+  def socket = WebSocket.accept[String, String] { request =>
+    println("connection activated")
+    // log the message to stdout and send response back to client
+    ActorFlow.actorRef { out => MyWebSocketActor.props(out) }
+  }
+
 }

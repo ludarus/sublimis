@@ -7,6 +7,7 @@
 
 # Map static resources from the /public folder to the /assets URL path
 
+GET /ws controllers.BasicController.socket
 
 POST /dump controllers.BasicController.thing()
 
@@ -21,8 +22,6 @@ GET /getUserInfo controllers.BasicController.giveUserInfo()
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 GET /yt controllers.Default.redirect(to = "https://youtube.com/@burgermanjoe")
-
-GET /test controllers.BasicController.usefulResponse()
 
 GET /test1 controllers.BasicController.returnJson()
 
