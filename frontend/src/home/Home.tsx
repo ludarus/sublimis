@@ -2,10 +2,10 @@ import { Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 
 import './Home.css'
-import D20 from './Model.tsx'
+import D20 from '../3d/Model.tsx'
 import NavBar from './Nav.tsx'
 
-import type { SublimisUser } from './types.tsx'
+import type { SublimisUser } from '../sys/SublimisUser.tsx'
 // import Spam from './tools/Spam.tsx'
 
 
