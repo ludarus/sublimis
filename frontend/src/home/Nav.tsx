@@ -1,35 +1,11 @@
 import { GoogleOAuthProvider, GoogleLogin, type CredentialResponse } from '@react-oauth/google'
 import Scroll from '../cool/Scroll.tsx'
 import { ScrollElement } from '../cool/Scroll.tsx'
-import { useState } from 'react'
-import { motion } from 'motion/react'
 import type { SublimisUser } from '../sys/SublimisUser.tsx'
 
 import "./Nav.css"
 
 
-function TestPost() {
-
-
-	async function postData(msg: String) {
-		await fetch(
-			'http://localhost:9000/testDump',
-			{
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(msg),
-				credentials: 'include'
-			}
-		).then(response => console.log(response))
-		// .then(data => console.log(data))
-		// .catch(error => console.log(error))
-	}
-	return (
-		<button onClick={() => postData("this is a message")}>
-			post something
-		</button>
-	)
-}
 
 export type NavBarProps = {
 	userInfo: SublimisUser | null,
@@ -37,11 +13,6 @@ export type NavBarProps = {
 }
 
 export default function NavBar({ userInfo, setInfo }: NavBarProps) {
-	const [nav1, setNav1] = useState(false)
-	const [logClicked, setLogClicked] = useState(false)
-
-
-
 	//functions 
 	async function googleLogin(credentialReponse: CredentialResponse) {
 		console.log("posting to backend")
@@ -56,81 +27,23 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 		setInfo(await res.json())
 	}
 
-	function TestGet() {
-		async function getData() {
-			const res = await fetch(
-				'http://localhost:9000/getUserInfo',
-				{
-					method: 'GET',
-					credentials: 'include'
-				}
-			)
-			setInfo(await res.json())
+	async function googleLogout() {
+		console.log("fetching logout form backend")
+		await fetch(
+			'http://localhost:9000/logout', {
+			method: 'GET',
+			credentials: 'include'
 		}
-		return (
-			<button onClick={() => getData()}>
-				get something
-			</button>
 		)
+		setInfo(null)
 	}
+
 
 	//jsx
 	return (
 		<nav
 			id='navbar'
 		>
-
-			{
-				// <div
-				// 	className='navbar-element'
-				// 	// onMouseEnter={() => { setNav1(true) }}
-				// 	// onMouseLeave={() => {
-				// 	// 	setNav1(false)
-				// 	// }}
-				//
-				// 	onClick={() => {
-				// 		setNav1(!nav1)
-				// 	}}
-				// >
-				//
-				// 	<h1>testing</h1>
-				// 	<motion.div
-				// 		className="dropdown
-				// 				"
-				// 		onClick={(e) => { e.stopPropagation() }}
-				//
-				// 		animate={{
-				// 			height: nav1 ? "10em" : "0em",
-				// 		}}
-				// 		transition={{
-				// 			type: "spring", bounce: 0.45, duration: 0.5
-				// 		}}
-				// 	>
-				//
-				// 		<div className='dropdown-element'
-				//
-				// 		>
-				// 			{TestPost()}
-				// 		</div >
-				// 		<div className='dropdown-element' >
-				// 			{TestGet()}
-				// 		</div >
-				// 		<div className='dropdown-element' >
-				// 			<a href='ws'>
-				// 				websocket testing
-				// 			</a>
-				// 		</div >
-				// 		<div className='dropdown-element' >
-				// 			<p>dropdown thing</p>
-				// 		</div >
-				// 		<div className='dropdown-element' >
-				// 			<p>dropdown thing</p>
-				// 		</div >
-				//
-				// 	</motion.div>
-				//
-				// </div>
-			}
 
 			<div
 				className='navbar-element'
@@ -148,7 +61,7 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 							thingies
 						</ScrollElement>
 						<ScrollElement>
-							logout
+							<button onClick={googleLogout}>logout</button>
 						</ScrollElement>
 					</Scroll>
 					:
@@ -178,18 +91,6 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 				}
 			</div>
 
-			<div
-				className='navbar-element'
-			>
-				<Scroll title='hi'>
-					<ScrollElement>
-						<a href='penis'>
-							<p>hello</p>
-						</a>
-					</ScrollElement>
-				</Scroll>
-
-			</div>
 		</nav>
 	)
 }

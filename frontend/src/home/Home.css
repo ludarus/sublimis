@@ -7,6 +7,14 @@
 	margin: 0;
 }
 
+#bg-container {
+	z-index: -1;
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+
+}
+
 main {
 	z-index: 0;
 	flex-grow: 1;
@@ -16,4 +24,3 @@ main {
 	height: 100%;
 	width: 100%;
 }
-

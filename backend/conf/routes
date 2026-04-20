@@ -9,6 +9,8 @@
 
 GET /ws controllers.BasicController.socket
 
+GET /logout controllers.BasicController.logout()
+
 POST /dump controllers.BasicController.thing()
 
 +nocsrf

@@ -106,6 +106,22 @@ class BasicController @Inject() (
     }
   }
 
+  def logout() = Action.async { request =>
+    request.cookies.get("session_id") match {
+      case Some(sid) =>
+        println("sessionid recieved: " + sid.toString())
+        val c = db.invalidateSessionId(sid.value)
+
+        c.map { i =>
+          println("logged out " + i + " amount")
+          Created("succesfluly logged out")
+        }
+      case None =>
+        println("no cookie sent")
+        Future.successful(BadRequest("no cookie sent"))
+    }
+  }
+
   def testRecieve() = Action.async { request =>
     println("post recieved")
 

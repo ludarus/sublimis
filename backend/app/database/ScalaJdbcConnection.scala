@@ -246,4 +246,23 @@ class ScalaJdbcConnection @Inject() (
     sessionid
   }
 
+  def invalidateSessionId(sid: String): Future[Int] = {
+    Future {
+      val qry = """
+        UPDATE sessions 
+          SET expires = ?
+        WHERE sessionid = ?
+        """
+      val connection = db.getConnection()
+      val findStmnt = connection.prepareStatement(qry)
+      // setting the expiry to be expired
+      findStmnt.setTimestamp(1, new Timestamp(69))
+      findStmnt.setObject(2, UUID.fromString(sid))
+      val res = findStmnt.executeUpdate()
+      println("successfully logged out " + res + " user")
+      connection.close()
+
+      res
+    }(databaseExecutionContext)
+  }
 }

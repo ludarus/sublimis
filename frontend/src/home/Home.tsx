@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
+import Aurora from '../bg/Aurora.tsx'
 
 import './Home.css'
 import D20 from '../3d/Model.tsx'
@@ -28,8 +29,15 @@ export default function Home() {
 	}, []); // runs once on page load
 
 	return (
-		<div id='root-container' className=''>
-
+		<div id='root-container' >
+			<div id='bg-container'>
+				<Aurora
+					colorStops={["#7cff67", "#B497CF", "#5227FF"]}
+					blend={0.5}
+					amplitude={1.0}
+					speed={0.4}
+				/>
+			</div>
 			<NavBar setInfo={setInfo} userInfo={userInfo} />
 
 			<main className=''>
@@ -37,7 +45,7 @@ export default function Home() {
 					<Canvas
 						camera={{ position: [0, 0, 5] }}
 					>
-						<Suspense fallback={null}>
+						<Suspense fallback={"loading..."}>
 							<D20 />
 						</Suspense>
 						<ambientLight
@@ -46,6 +54,7 @@ export default function Home() {
 					</Canvas>
 				</div>
 			</main>
+
 		</div >
 
 	)

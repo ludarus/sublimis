@@ -13,7 +13,8 @@ export function ScrollElement({ children }: ScrollElementProps) {
 	return (
 		<div
 			onMouseEnter={() => setHovered(true)}
-			onMouseLeave={() => { setHovered(false) }}
+			onMouseLeave={() => setHovered(false)}
+			onClick={(e) => e.stopPropagation()}
 			className="scroll-dropdown-element "
 		>
 
@@ -45,31 +46,38 @@ type ScrollProps = {
 }
 
 export default function Scroll({ children, title, pic = null }: ScrollProps) {
-
 	const [hovered, setHovered] = useState(false)
-	const [clicked, setClicked] = useState(false)
+	const [clickState, setClickState] = useState(1)
+
 	return (
 		<div className="scroll-main"
 			onMouseEnter={() => { setHovered(true) }}
 			onMouseLeave={() => { setHovered(false) }}
-			onClick={() => { setClicked(!clicked) }}
+			onClick={() => { setClickState((clickState + 1) % 3) }}
 		>
 			<div className="scroll-top">
 				<svg className="scroll-left" width="1.5em" height="2em" viewBox="0 0 90 120" fill="none">
 					<ellipse cx="44.9952" cy="60.0001" rx="44.9029" ry="59.931" transform="rotate(-0.088276 44.9952 60.0001)" fill="#6C6247" />
 					<path d="M48.4117 15.0466C37.4247 15.0636 26.8961 20.6047 19.1422 30.451C11.3883 40.2973 7.0442 53.6422 7.06561 67.5501C7.08701 81.4579 11.4721 94.7893 19.2563 104.612C27.0405 114.434 37.5861 119.943 48.5732 119.926L48.4924 67.4862L48.4117 15.0466Z" fill="#D3C296" />
+
 					<path d="M83.6534 45.9136C80.9837 37.4157 76.7897 30.0935 71.5033 24.7013C66.2169 19.3091 60.0293 16.0418 53.5779 15.2361C47.1264 14.4304 40.6443 16.1154 34.7994 20.1174C28.9545 24.1194 23.958 30.2938 20.3247 38.0046C16.6914 45.7154 14.5526 54.6837 14.1286 63.9858C13.7046 73.2879 15.0108 82.5874 17.9125 90.9264C20.8143 99.2654 25.2068 106.342 30.6375 111.428C36.0681 116.514 42.3407 119.425 48.809 119.862L50.4717 67.4795L83.6534 45.9136Z" fill="#6C6247" />
 				</svg>
 				<svg className="scroll-right" width="1.5em" height="2em" viewBox="0 0 90 120" fill="none">
 					<ellipse cx="45" cy="60" rx="45" ry="60" transform="rotate(-0.088276 45 60)" fill="#D3C296" />
+					<motion.ellipse cx="70" cy="60" rx="15" ry="15" transform="rotate(-0.088276 45 60)" fill="#6C6247"
+						animate={{ opacity: (clickState == 0) ? 1 : 0 }} />
 				</svg>
 			</div>
 
 			<motion.div className='scroll-title'
+				transition={{
+					type: "tween", duration: 1, ease: "easeOut"
+				}}
+				animate={{ height: (clickState != 0 || hovered) ? "auto" : "0em" }}
 			>
 				{pic ?
 					//if has picture
-					<div style={{padding:"0.25em 0em"}}>
+					<div style={{ padding: "0.25em 0em" }}>
 						<img src={pic} />
 					</div>
 					:
@@ -81,15 +89,13 @@ export default function Scroll({ children, title, pic = null }: ScrollProps) {
 				transition={{
 					type: "tween", duration: 1, ease: "easeOut"
 				}}
-				animate={{ height: hovered ? "auto" : "0em" }}
+				animate={{ height: hovered ? "auto" : ((clickState == 2) ? "auto" : "0em") }}
 
 			>
-				{pic ?
+				{pic && (
 					//if has pic
 					<h1 style={{ fontSize: "1.5em" }}>{title}</h1>
-					:
-					//if doesnt have pic
-					null
+				)
 				}
 				{children}
 			</motion.div>
@@ -97,6 +103,9 @@ export default function Scroll({ children, title, pic = null }: ScrollProps) {
 			<div className="scroll-bottom">
 				<svg className="scroll-right" width="1.5em" height="2em" viewBox="0 0 90 120" fill="none">
 					<ellipse cx="45" cy="60" rx="45" ry="60" transform="rotate(-0.088276 45 60)" fill="#D3C296" />
+
+					<motion.ellipse cx="70" cy="60" rx="15" ry="15" transform="rotate(-0.088276 45 60)" fill="#6C6247"
+						animate={{ opacity: (clickState == 2) ? 1 : 0 }} />
 				</svg>
 				<svg className="scroll-left" width="1.5em" height="2em" viewBox="0 0 90 120" fill="none" transform="scale(1 -1)">
 					<ellipse cx="44.9952" cy="60.0001" rx="44.9029" ry="59.931" transform="rotate(-0.088276 44.9952 60.0001)" fill="#6C6247" />
