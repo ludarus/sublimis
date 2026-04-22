@@ -1,34 +1,12 @@
 # Routes
-# This file defines all application routes (Higher priority routes first)
-# https://www.playframework.com/documentation/latest/ScalaRouting
 
-# An example controller showing a sample home page
-# GET     /                           controllers.HomeController.index()
+# GET /createLiveCampaign controllers.DbController.
 
-# Map static resources from the /public folder to the /assets URL path
+GET /ws controllers.CampaignController.socket
 
-GET /ws controllers.BasicController.socket
-
-GET /logout controllers.BasicController.logout()
-
-POST /dump controllers.BasicController.thing()
+GET /logout controllers.DbController.logout()
 
 +nocsrf
-POST /googleAuth	controllers.BasicController.signinVerification()
+POST /googleAuth	controllers.DbController.signinVerification()
 
-+nocsrf
-POST /testDump	controllers.BasicController.testRecieve()
-
-GET /getUserInfo controllers.BasicController.giveUserInfo()
-
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-
-GET /yt controllers.Default.redirect(to = "https://youtube.com/@burgermanjoe")
-
-GET /test1 controllers.BasicController.returnJson()
-
-GET / controllers.BasicController.index()
-
-GET /home controllers.BasicController.notDone()
-
-GET /:name controllers.BasicController.fullRedirect(name: String)
+GET /getUserInfo controllers.DbController.giveUserInfo()

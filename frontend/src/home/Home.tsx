@@ -30,14 +30,17 @@ export default function Home() {
 
 	return (
 		<div id='root-container' >
-			<div id='bg-container'>
-				<Aurora
-					colorStops={["#7cff67", "#B497CF", "#5227FF"]}
-					blend={0.5}
-					amplitude={1.0}
-					speed={0.4}
-				/>
-			</div>
+			{
+				// <div id='bg-container'>
+				// 	<Aurora
+				// 		colorStops={["#7cff67", "#B497CF", "#5227FF"]}
+				// 		blend={0.5}
+				// 		amplitude={1.0}
+				// 		speed={0.4}
+				// 	/>
+				// </div>
+			}
+
 			<NavBar setInfo={setInfo} userInfo={userInfo} />
 
 			<main className=''>

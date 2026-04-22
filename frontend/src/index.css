@@ -18,7 +18,7 @@
 :root {
 	/* TODO: REWORK COLOUR PALETTE */
 
-	/* --background: #d7DAE5; */
+	--background: #d7DAE5;
 	--text-colour: #1c1103;
 	--accent-bg: #B9CDDA;
 	--alt-accent: #352208;

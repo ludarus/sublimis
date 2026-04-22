@@ -61,7 +61,7 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 							thingies
 						</ScrollElement>
 						<ScrollElement>
-							<button onClick={googleLogout}>logout</button>
+							<p onClick={googleLogout}>logout</p>
 						</ScrollElement>
 					</Scroll>
 					:
