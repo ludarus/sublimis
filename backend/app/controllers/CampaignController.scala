@@ -17,21 +17,17 @@ class CampaignController @Inject() (
     mat: Materializer
 ) extends AbstractController(cc) {
 
-  // ======================== WEBSOCKET CONTROLLER METHODS =======================================
+  // ======================== ACTION CONTROLLER METHODS ========================
 
-  // def socket = WebSocket.accept[String, String] { request =>
-  //   println("connection activated")
-  //   // log the message to stdout and send response back to client
-  //   Flow[String].map { msg =>
-  //     println(msg)
-  //     "I received your message: " + msg
-  //   }
-  // }
+    
 
-  def socket = WebSocket.accept[String, String] { request =>
+  // ======================== WEBSOCKET CONTROLLER METHODS ========================
+
+  def echo = WebSocket.accept[String, String] { request =>
     println("connection activated")
     // log the message to stdout and send response back to client
     ActorFlow.actorRef { out => MyWebSocketActor.props(out) }
   }
+
 
 }

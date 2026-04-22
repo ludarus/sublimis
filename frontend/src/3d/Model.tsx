@@ -3,11 +3,11 @@ import { useState, useRef, useEffect } from 'react'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { Mesh } from 'three'
 import { useLoader, useFrame } from '@react-three/fiber'
+import { useNavigate } from "react-router-dom"
 
-function handleD20Click() {
-	alert("clicked")
-}
 export default function D20() {
+	const navigate = useNavigate()
+
 	const glb = useLoader(GLTFLoader, 'galaxy.glb');
 	const meshRef = useRef<Mesh>(null!)
 	const [hovered, setHovered] = useState(false)
@@ -30,7 +30,7 @@ export default function D20() {
 	})
 	return (
 		<mesh
-			onClick={handleD20Click}
+			onClick={() => navigate("live/testing")}
 			ref={meshRef}
 			//hover code taken from https://codesandbox.io/p/sandbox/q23sw?file=%2Fsrc%2FApp.js%3A27%2C58-27%2C59
 			onPointerOver={(e) => (e.stopPropagation(), setHovered(true))}

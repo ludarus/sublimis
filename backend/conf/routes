@@ -1,8 +1,8 @@
 # Routes
 
-# GET /createLiveCampaign controllers.DbController.
+# GET /createLiveCampaign controllers.CampaignController.
 
-GET /ws controllers.CampaignController.socket
+GET /ws controllers.CampaignController.echo
 
 GET /logout controllers.DbController.logout()
 

@@ -45,7 +45,7 @@ class DbController @Inject() (
     .setAudience(Collections.singletonList(clientId))
     .build();
 
-  // ======================== ACTION CONTROLLER METHODS =======================================
+  // ======================== ACTION CONTROLLER METHODS ========================
 
   def giveUserInfo() = Action.async { request =>
     println("here is the requersdt " + request.toString())

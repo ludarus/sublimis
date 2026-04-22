@@ -1,6 +1,5 @@
 import { GoogleOAuthProvider, GoogleLogin, type CredentialResponse } from '@react-oauth/google'
-import Scroll from '../cool/Scroll.tsx'
-import { ScrollElement } from '../cool/Scroll.tsx'
+import Scroll, { ScrollElement } from '../cool/Scroll.tsx'
 import type { SublimisUser } from '../sys/SublimisUser.tsx'
 
 import "./Nav.css"
