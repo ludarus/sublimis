@@ -6,7 +6,7 @@ export default function Live() {
 	let { campaignId } = useParams();
 
 	return (
-		<div id="root-container" className="border">
+		<div id="root-container-live" className="border">
 			<div id="chat-container" className="border">
 				<h1>{campaignId}</h1>
 			</div>

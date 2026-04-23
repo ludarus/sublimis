@@ -19,6 +19,8 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2
 libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "42.7.10"
 )
+
+libraryDependencies += "io.lettuce" % "lettuce-core" % "6.3.2.RELEASE"
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.burgermanjoe.controllers._"
 

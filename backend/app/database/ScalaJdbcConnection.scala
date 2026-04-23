@@ -7,13 +7,13 @@ import scala.concurrent.Future
 import play.api.db.Database
 import java.sql.Connection
 import java.sql.Timestamp
-import database.DatabaseExecutionContext
+import database.PostgresExecutionContext
 import custom.SublimisUser
 
 // @inject just makes play create instances of the constructor parameters
 class ScalaJdbcConnection @Inject() (
     db: Database,
-    databaseExecutionContext: DatabaseExecutionContext
+    databaseExecutionContext: PostgresExecutionContext
 ) {
 
   private val selectFromSession = """
