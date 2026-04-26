@@ -23,6 +23,7 @@ import views.html.defaultpages.notFound
 import scala.util.Failure
 import scala.util.Success
 
+
 class DbController @Inject() (
     cc: ControllerComponents,
     db: ScalaJdbcConnection,
@@ -32,9 +33,9 @@ class DbController @Inject() (
   implicit val ec: scala.concurrent.ExecutionContext =
     scala.concurrent.ExecutionContext.global
 
-  val JsonFactory = GsonFactory.getDefaultInstance();
-  val clientId = config.get[String]("google.clientId")
-  val dbPass = config.get[String]("db.default.password")
+  private val JsonFactory = GsonFactory.getDefaultInstance();
+  private val clientId = config.get[String]("google.clientId")
+  private val dbPass = config.get[String]("db.default.password")
 
   println("clientid = " + clientId)
   println("pass = " + dbPass)
@@ -101,12 +102,14 @@ class DbController @Inject() (
         println(credReal)
         try {
           println("start of try")
+          println("credential = " + credReal)
           // verifying token
           val idToken = verifier.verify(credReal)
+          println("verified")
           // extracting payload
           val payload = idToken.getPayload()
-
           println("updaing usr")
+
           val f = db.handleUser(payload)
 
           f.map { usr =>

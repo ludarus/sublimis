@@ -8,9 +8,11 @@ import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
+import database.LettuceConnection
 
 class CampaignController @Inject() (
     cc: ControllerComponents,
+    lc: LettuceConnection,
     config: Configuration
 )(implicit
     system: ActorSystem,
