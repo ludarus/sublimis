@@ -9,36 +9,28 @@ import database.RedisExecutionContext
 import play.api.Configuration
 
 import io.lettuce.core._;
-import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.StatefulRedisConnection
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection
 import io.lettuce.core.api.sync.RedisCommands;
 
 class LettuceConnection @Inject() (
-    db: Database,
-    databaseExecutionContext: RedisExecutionContext,
+    redisExecutionContext: RedisExecutionContext,
+    rclient: RedisClient,
+    pg: ScalaJdbcConnection,
+    rstdConnection: StatefulRedisConnection[String, String],
+    rpsConnection: StatefulRedisPubSubConnection[String, String],
     config: Configuration
 ) {
-  private val redisPass = config.get[String]("redis.default.password")
 
-  private val uri: RedisURI = RedisURI.Builder
-    // .redis("99.240.208.73", 6379)
-    .redis("10.0.0.108", 6379)
-    .withPassword(redisPass)
-    .build();
-
-  private val client: RedisClient = RedisClient.create(uri);
+  val commands = rstdConnection.sync()
 
   def ping() = {
     Future {
-      val connection = client.connect();
-      val commands = connection.sync();
       println(commands.ping())
-      connection.close()
-    }(databaseExecutionContext)
+    }(redisExecutionContext)
   }
 
-  def newCampaign(campaignId: String) = {
-
-  }
+  def newCampaign(campaignId: String) = {}
 
   // TODO: FIGURE OUT WHICH STUF I WANT TO KEEP OPEN AND CLOSE, BUT CLIENT SHOULD BE CLOSED AT SOME POINT
 

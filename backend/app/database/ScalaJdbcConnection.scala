@@ -12,8 +12,8 @@ import custom.SublimisUser
 
 // @inject just makes play create instances of the constructor parameters
 class ScalaJdbcConnection @Inject() (
-    db: Database,
-    databaseExecutionContext: PostgresExecutionContext
+    pg: Database,
+    postgresExecutionContext: PostgresExecutionContext
 ) {
 
   private val selectFromSession = """
@@ -35,7 +35,7 @@ class ScalaJdbcConnection @Inject() (
           ON g.id = s.userid
         WHERE s.sessionid = ?
       """
-      val connection = db.getConnection()
+      val connection = pg.getConnection()
       val findStmnt = connection.prepareStatement(joinqry)
       findStmnt.setObject(1, UUID.fromString(sid))
 
@@ -68,7 +68,7 @@ class ScalaJdbcConnection @Inject() (
         connection.close()
         None
       }
-    }(databaseExecutionContext)
+    }(postgresExecutionContext)
   }
 
   def incrementExpiry(con: Connection, sid: String): Int = {
@@ -98,7 +98,7 @@ class ScalaJdbcConnection @Inject() (
   // takes oauth id and updates/adds user in db, returns a struct/class containing user info to return to frontend
   def handleUser(payload: Payload): Future[SublimisUser] = {
     Future {
-      val connection = db.getConnection()
+      val connection = pg.getConnection()
       // see if there's already an entry for user
       val findStmnt = connection.prepareStatement(selectFromGUsers)
       findStmnt.setString(1, payload.getSubject())
@@ -229,7 +229,7 @@ class ScalaJdbcConnection @Inject() (
         payload.get("name").toString(),
         payload.get("picture").toString()
       )
-    }(databaseExecutionContext)
+    }(postgresExecutionContext)
   }
 
   def generateSessionId(connection: Connection): UUID = {
@@ -253,7 +253,7 @@ class ScalaJdbcConnection @Inject() (
           SET expires = ?
         WHERE sessionid = ?
         """
-      val connection = db.getConnection()
+      val connection = pg.getConnection()
       val findStmnt = connection.prepareStatement(qry)
       // setting the expiry to be expired
       findStmnt.setTimestamp(1, new Timestamp(69))
@@ -263,6 +263,6 @@ class ScalaJdbcConnection @Inject() (
       connection.close()
 
       res
-    }(databaseExecutionContext)
+    }(postgresExecutionContext)
   }
 }

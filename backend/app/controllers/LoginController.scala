@@ -24,9 +24,9 @@ import scala.util.Failure
 import scala.util.Success
 
 
-class DbController @Inject() (
+class LoginController @Inject() (
     cc: ControllerComponents,
-    db: ScalaJdbcConnection,
+    pg: ScalaJdbcConnection,
     config: Configuration
 ) extends AbstractController(cc) {
 
@@ -35,10 +35,10 @@ class DbController @Inject() (
 
   private val JsonFactory = GsonFactory.getDefaultInstance();
   private val clientId = config.get[String]("google.clientId")
-  private val dbPass = config.get[String]("db.default.password")
+  // private val dbPass = config.get[String]("db.default.password")
 
   println("clientid = " + clientId)
-  println("pass = " + dbPass)
+  // println("pass = " + dbPass)
   val verifier = new GoogleIdTokenVerifier.Builder(
     new NetHttpTransport(),
     JsonFactory
@@ -53,7 +53,7 @@ class DbController @Inject() (
     request.cookies.get("session_id") match {
       case Some(sid) =>
         println("sessionid recieved: " + sid.toString())
-        val c = db.verifySid(sid.value)
+        val c = pg.verifySid(sid.value)
 
         c.map { option =>
           option match {
@@ -77,7 +77,7 @@ class DbController @Inject() (
     request.cookies.get("session_id") match {
       case Some(sid) =>
         println("sessionid recieved: " + sid.toString())
-        val c = db.invalidateSessionId(sid.value)
+        val c = pg.invalidateSessionId(sid.value)
 
         c.map { i =>
           println("logged out " + i + " amount")
@@ -110,7 +110,7 @@ class DbController @Inject() (
           val payload = idToken.getPayload()
           println("updaing usr")
 
-          val f = db.handleUser(payload)
+          val f = pg.handleUser(payload)
 
           f.map { usr =>
             println("usr = " + usr.toString)

@@ -1,12 +1,12 @@
 # Routes
 
-# GET /createLiveCampaign controllers.CampaignController.
+GET /createLiveCampaign controllers.CampaignController.createLiveCampaign()
 
 GET /ws controllers.CampaignController.echo
 
-GET /logout controllers.DbController.logout()
+GET /logout controllers.LoginController.logout()
 
 +nocsrf
-POST /googleAuth	controllers.DbController.signinVerification()
+POST /googleAuth	controllers.LoginController.signinVerification()
 
-GET /getUserInfo controllers.DbController.giveUserInfo()
+GET /getUserInfo controllers.LoginController.giveUserInfo()

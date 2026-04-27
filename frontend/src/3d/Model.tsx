@@ -8,6 +8,20 @@ import { useNavigate } from "react-router-dom"
 export default function D20() {
 	const navigate = useNavigate()
 
+	type CampaignId = {
+		cid: String
+	}
+
+	async function handleClick() {
+		const res = await fetch(
+			'http://localhost:9000/createLiveCampaign', {
+			method: 'GET',
+			credentials: 'include'
+		})
+		const cidJson: CampaignId = await res.json()
+		navigate(`live/${cidJson.cid}`)
+	}
+
 	const glb = useLoader(GLTFLoader, 'galaxy.glb');
 	const meshRef = useRef<Mesh>(null!)
 	const [hovered, setHovered] = useState(false)
@@ -30,7 +44,7 @@ export default function D20() {
 	})
 	return (
 		<mesh
-			onClick={() => navigate("live/testing")}
+			onClick={handleClick}
 			ref={meshRef}
 			//hover code taken from https://codesandbox.io/p/sandbox/q23sw?file=%2Fsrc%2FApp.js%3A27%2C58-27%2C59
 			onPointerOver={(e) => (e.stopPropagation(), setHovered(true))}

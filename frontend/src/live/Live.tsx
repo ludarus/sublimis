@@ -10,7 +10,7 @@ export default function Live() {
 			<div id="chat-container" className="border">
 				<h1>{campaignId}</h1>
 			</div>
-			<div id="game-container" className="border">
+ 		<div id="game-container" className="border">
 				<div id="map-container" className="border">
 				</div>
 				<div id="terminal-container" className="border">

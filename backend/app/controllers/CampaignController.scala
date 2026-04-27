@@ -9,6 +9,10 @@ import org.apache.pekko.stream.Materializer
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import database.LettuceConnection
+import play.api.mvc.Action
+import scala.concurrent.Future
+import scala.util.Failure
+import scala.util.Success
 
 class CampaignController @Inject() (
     cc: ControllerComponents,
@@ -21,7 +25,18 @@ class CampaignController @Inject() (
 
   // ======================== ACTION CONTROLLER METHODS ========================
 
-    
+  def createLiveCampaign = Action { request =>
+    println("creatlivecampgaian")
+    request.cookies.get("session_id") match {
+      case Some(sid) =>
+        println("sessionid recieved: " + sid.toString())
+        lc.ping()
+        Created("recieved cookie")
+      case None =>
+        println("no cookie sent")
+        BadRequest("no cookie sent")
+    }
+  }
 
   // ======================== WEBSOCKET CONTROLLER METHODS ========================
 
@@ -30,6 +45,5 @@ class CampaignController @Inject() (
     // log the message to stdout and send response back to client
     ActorFlow.actorRef { out => MyWebSocketActor.props(out) }
   }
-
 
 }

@@ -7,6 +7,5 @@ export type SublimisUser = {
 	email_verified: boolean
 	locale: string
 	sessionid: string
-
 }
 
