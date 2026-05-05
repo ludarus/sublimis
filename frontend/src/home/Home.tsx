@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
-import Aurora from '../bg/Aurora.tsx'
+// import Aurora from '../bg/Aurora.tsx'
 
 import './Home.css'
 import D20 from '../3d/Model.tsx'

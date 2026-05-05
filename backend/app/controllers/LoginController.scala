@@ -23,7 +23,6 @@ import views.html.defaultpages.notFound
 import scala.util.Failure
 import scala.util.Success
 
-
 class LoginController @Inject() (
     cc: ControllerComponents,
     pg: ScalaJdbcConnection,
@@ -46,6 +45,11 @@ class LoginController @Inject() (
     .setAudience(Collections.singletonList(clientId))
     .build();
 
+  // ======================== HELPER METHODS ========================
+  def verifyRequest(request: Request[AnyContent]) = { 
+    //TODO REFACTOR THE COOKIE AND USER VERIFICATION INTO A HELPER FUNCTION
+
+  }
   // ======================== ACTION CONTROLLER METHODS ========================
 
   def giveUserInfo() = Action.async { request =>

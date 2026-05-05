@@ -4,6 +4,7 @@ import play.api.libs.json._
 
 class SublimisUser(
     val sessionid: String,
+    val userid: String,
     val email: String,
     val name: String,
     val img: String,

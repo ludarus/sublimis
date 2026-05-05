@@ -23,6 +23,8 @@ class ScalaJdbcConnection @Inject() (
       SELECT * FROM googleusers WHERE id = ?
   """
 
+  // TODO REFACTOR THIS CODE TO REMOVE DUPLICATION, AND REWORK CONNECTIONS AND DISCONNECTIONS
+
   def verifySid(sid: String): Future[Option[SublimisUser]] = {
     Future {
       // getting googleusers info and sessions info witha  join query
@@ -55,6 +57,7 @@ class ScalaJdbcConnection @Inject() (
         // returning a userclass with relevant info
         val usr = new SublimisUser(
           sid,
+          userRes.getString("id"),
           userRes.getString("email"),
           userRes.getString("name"),
           userRes.getString("img")
@@ -225,6 +228,7 @@ class ScalaJdbcConnection @Inject() (
       }
       new SublimisUser(
         sessionid.toString(),
+        payload.getSubject(),
         payload.getEmail(),
         payload.get("name").toString(),
         payload.get("picture").toString()
