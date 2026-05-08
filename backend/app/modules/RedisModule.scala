@@ -56,8 +56,8 @@ class RedisModule extends AbstractModule {
       lifecycle: ApplicationLifecycle
   ): StatefulRedisPubSubConnection[String, String] = {
     val connection = client.connectPubSub()
-
     lifecycle.addStopHook(() => Future.successful(connection.close()))
+    // connection.sync().psubscribe("lobbies:*:events")
     connection
   }
 }

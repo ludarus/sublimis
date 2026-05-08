@@ -1,3 +1,5 @@
+//abstraction layer to interface with the redis cache/db
+
 package database
 
 import javax.inject.Inject
@@ -8,12 +10,15 @@ import java.util.UUID
 import java.sql.Timestamp
 import database.RedisExecutionContext
 import play.api.Configuration
+import javax.inject.Singleton
 
 import io.lettuce.core._;
 import io.lettuce.core.api.StatefulRedisConnection
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection
+import io.lettuce.core.pubsub.RedisPubSubListener
 import io.lettuce.core.api.sync.RedisCommands;
 
+@Singleton
 class LettuceConnection @Inject() (
     redisExecutionContext: RedisExecutionContext,
     client: RedisClient,
@@ -24,6 +29,32 @@ class LettuceConnection @Inject() (
 
   // val commands = stdConnection.async()
   val commands = stdConnection.sync()
+  val psCommands = psConnection.sync()
+
+  // adding a listener for the pub sub events
+  psConnection.addListener(new RedisPubSubListener[String, String]() {
+    override def message(channel: String, message: String): Unit = {
+      println("recieved messgaeA")
+    }
+
+    override def message(pattern: String, channel: String, message: String) {
+      //correct override for event pub/sub
+      println("recieved msg " + pattern, channel, message)
+    }
+
+    override def subscribed(channel: String, count: Long) {}
+
+    override def psubscribed(channel: String, count: Long) {}
+
+    override def unsubscribed(channel: String, count: Long) {}
+
+    override def punsubscribed(channel: String, count: Long) {}
+
+  })
+
+  println("added listener")
+  psCommands.psubscribe("lobbies:*:events")
+  println("subscribed")
 
   def ping() = {
     Future {
@@ -39,15 +70,12 @@ class LettuceConnection @Inject() (
       // setting the creator to be the user's id
       commands.set(s"lobbies:${cid}:owner", uid)
 
+      // publishing change
+      commands.publish(s"lobbies:${cid}:events", "owner-updated")
       println("the owner is " + commands.get(s"lobbies:${cid}:owner"))
 
       cid
     }(redisExecutionContext)
   }
-
-  // TODO: FIGURE OUT WHICH STUF I WANT TO KEEP OPEN AND CLOSE, BUT CLIENT SHOULD BE CLOSED AT SOME POINT
-
-  // probably have a client open when a campaign(or maybe just a single websocket) opens, and close the client when the campaign/websocket is done
-  // client.close()
 
 }

@@ -34,6 +34,7 @@ export default function D20() {
 	useEffect(() => void (document.body.style.cursor = hovered ? 'pointer' : 'auto'), [hovered])
 
 	useFrame((state) => {
+		//TODO FIX REFRESH RATE MOVEMENT SPEED DEPENDENCY 
 		const t = state.clock.getElapsedTime();
 		meshRef.current.rotation.y = THREE.MathUtils.lerp(
 			meshRef.current.rotation.y,
