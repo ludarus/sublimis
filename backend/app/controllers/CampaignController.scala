@@ -6,6 +6,7 @@ import play.api.Configuration
 import database.ScalaJdbcConnection
 import org.apache.pekko.stream.scaladsl._
 import websocket.MyWebSocketActor
+import websocket.LiveCampaignActor
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import play.api.libs.streams.ActorFlow
@@ -67,10 +68,41 @@ class CampaignController @Inject() (
 
   // ======================== WEBSOCKET CONTROLLER METHODS ========================
 
+  // test echo func
   def echo = WebSocket.accept[String, String] { request =>
     println("connection activated")
     // log the message to stdout and send response back to client
     ActorFlow.actorRef { out => MyWebSocketActor.props(out) }
   }
 
+  // verify before accepting ws request
+  // TODO i really need to make a nice wrapper function around this verification flow becauase it's killing me
+  def live = WebSocket.acceptOrResult[String, String] { request =>
+    request.cookies.get("session_id") match {
+      case Some(sid) =>
+        println("worked")
+        println("sessionid recieved: " + sid.toString())
+        val c = pg.verifySid(sid.value)
+
+        c.map { option =>
+          option match {
+            case Some(usr) =>
+              // on verified user
+              println("user found " + usr.name)
+              // storing thing in the other thing
+              Right(
+                ActorFlow.actorRef { out =>
+                  MyWebSocketActor.props(out)
+                }
+              )
+            case None =>
+              println("user not found")
+              Left(Forbidden)
+          }
+        }
+      case None =>
+        println("didn't worked")
+        Future.successful(Left(Forbidden))
+    }
+  }
 }

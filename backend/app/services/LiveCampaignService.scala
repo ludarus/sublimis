@@ -7,10 +7,9 @@ import javax.inject.Inject
 import database.LettuceConnection
 
 @Singleton
-class LobbyService @Inject() (
+class LiveCampaignService @Inject() (
     lc: LettuceConnection
-    // lobbyRegistry: LobbyRegistry TODO MAKE THIS
 ) {
   // maps campiagn ids to actors
-  val lobbyRegistry: Map[String, Int] = Map()
+  val lobbyRegistry: Map[String, /*not actually an int*/ Int] = Map()
 }

@@ -37,18 +37,18 @@ class LettuceConnection @Inject() (
       println("recieved messgaeA")
     }
 
-    override def message(pattern: String, channel: String, message: String) {
-      //correct override for event pub/sub
+    override def message(pattern: String, channel: String, message: String) = {
+      // correct override for event pub/sub
       println("recieved msg " + pattern, channel, message)
     }
 
-    override def subscribed(channel: String, count: Long) {}
+    override def subscribed(channel: String, count: Long): Unit = {}
 
-    override def psubscribed(channel: String, count: Long) {}
+    override def psubscribed(channel: String, count: Long): Unit = {}
 
-    override def unsubscribed(channel: String, count: Long) {}
+    override def unsubscribed(channel: String, count: Long): Unit = {}
 
-    override def punsubscribed(channel: String, count: Long) {}
+    override def punsubscribed(channel: String, count: Long): Unit = {}
 
   })
 

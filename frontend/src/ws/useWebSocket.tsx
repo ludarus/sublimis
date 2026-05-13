@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 
-const useWebSocket = () => {
+const useWebSocket = (address: string) => {
 	const wsRef = useRef<WebSocket | null>(null)
 	const [messages, setMessages] = useState<String[]>([]);
 	// const [readyState, setReadyState] = useState(WebSocket.CLOSED)
 
 	useEffect(() => {
-		const newSocket = new WebSocket("ws://localhost:9000/ws")
+		const newSocket = new WebSocket(address)
 		wsRef.current = newSocket;
 
 		newSocket.onopen = () => {

@@ -1,3 +1,4 @@
+//testing class, do not use in production code
 package websocket
 
 import org.apache.pekko.actor._

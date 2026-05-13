@@ -1,12 +1,20 @@
 # Routes
 
+# creating live campaign 
 GET /createLiveCampaign controllers.CampaignController.createLiveCampaign()
 
+# echo for testing 
 GET /ws controllers.CampaignController.echo
 
+#LIVE CAMPAIGN WEBSOCKET ENDPOINT, info passed in request?
+GET /live controllers.CampaignController.live
+
+# logging out endpoint
 GET /logout controllers.LoginController.logout()
 
+# figure out csrf, google auth
 +nocsrf
 POST /googleAuth	controllers.LoginController.signinVerification()
 
+# getting user info on reload  
 GET /getUserInfo controllers.LoginController.giveUserInfo()

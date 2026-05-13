@@ -4,7 +4,7 @@ import useWebSocket from './useWebSocket.tsx'
 import '../home/Home.css'
 
 export default function Ws() {
-	const { messages, sendMessage } = useWebSocket()
+	const { messages, sendMessage } = useWebSocket("ws://localhost:9000/ws")
 
 	// const connectionStatus = {
 	// 	[ReadyState.CONNECTING]: 'Connecting',
