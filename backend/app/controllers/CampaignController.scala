@@ -16,11 +16,13 @@ import play.api.mvc.Action
 import scala.concurrent.Future
 import scala.util.Failure
 import scala.util.Success
+import services.LiveCampaignService
 
 class CampaignController @Inject() (
     cc: ControllerComponents,
     lc: LettuceConnection,
     pg: ScalaJdbcConnection,
+    lobbyService: LiveCampaignService,
     config: Configuration
 )(implicit
     system: ActorSystem,
@@ -44,16 +46,15 @@ class CampaignController @Inject() (
               println("user found " + usr.name)
               // UNIT GOES HERE
               lc.ping()
-              val futureRes = lc.newCampaign(usr.userid)
 
-              futureRes.map { cid =>
-                // UNIT ENDS
+              // UNIT ENDS
+              Future.successful(
                 Created(
                   Json.obj(
-                    "cid" -> cid.toString()
+                    "cid" -> lobbyService.newCampaign(usr.userid).toString()
                   )
                 )
-              }
+              )
 
             case None =>
               println("user not found")
@@ -64,6 +65,18 @@ class CampaignController @Inject() (
         println("no cookie sent")
         Future.successful(BadRequest("no cookie sent"))
     }
+  }
+
+  def giveLiveCampaigns = Action {
+    // user verification not needed on this, because browsing public campaigns should be fine
+    println("giving live info")
+    val cids = lobbyService.lobbyRegistry.keys.toArray
+    println(cids.length)
+    Created(
+      Json.obj(
+        "cids" -> cids
+      )
+    )
   }
 
   // ======================== WEBSOCKET CONTROLLER METHODS ========================
@@ -91,6 +104,7 @@ class CampaignController @Inject() (
               println("user found " + usr.name)
               // storing thing in the other thing
               Right(
+                // creating a child actorRef
                 ActorFlow.actorRef { out =>
                   MyWebSocketActor.props(out)
                 }
@@ -105,4 +119,5 @@ class CampaignController @Inject() (
         Future.successful(Left(Forbidden))
     }
   }
+
 }

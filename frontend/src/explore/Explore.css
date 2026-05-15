@@ -1,0 +1,8 @@
+#root-container-expore {
+	display: flex;
+	overflow-x: hidden;
+	flex-direction: row;
+	height: 100vh;
+	width: 100vw;
+	margin: 0;
+}

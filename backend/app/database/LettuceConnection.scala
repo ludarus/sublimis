@@ -62,11 +62,10 @@ class LettuceConnection @Inject() (
     }(redisExecutionContext)
   }
 
-  def newCampaign(uid: String): Future[UUID] = {
+  def setOwner(uid: String, cid: UUID) = {
     Future {
       // gen new uuid. the chances of one matching an already existing cid are so low im not even going to check for it (even tho i did for the sessionids)
-      val cid = UUID.randomUUID()
-
+      
       // setting the creator to be the user's id
       commands.set(s"lobbies:${cid}:owner", uid)
 
@@ -74,7 +73,6 @@ class LettuceConnection @Inject() (
       commands.publish(s"lobbies:${cid}:events", "owner-updated")
       println("the owner is " + commands.get(s"lobbies:${cid}:owner"))
 
-      cid
     }(redisExecutionContext)
   }
 

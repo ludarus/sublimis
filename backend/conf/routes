@@ -18,3 +18,6 @@ POST /googleAuth	controllers.LoginController.signinVerification()
 
 # getting user info on reload  
 GET /getUserInfo controllers.LoginController.giveUserInfo()
+
+# get live campaigns currently being hosted
+GET /getLive controllers.CampaignController.giveLiveCampaigns()
