@@ -17,6 +17,7 @@ import scala.concurrent.Future
 import scala.util.Failure
 import scala.util.Success
 import services.LiveCampaignService
+import websocket.CampaignUserActor
 
 class CampaignController @Inject() (
     cc: ControllerComponents,
@@ -90,7 +91,7 @@ class CampaignController @Inject() (
 
   // verify before accepting ws request
   // TODO i really need to make a nice wrapper function around this verification flow becauase it's killing me
-  def live = WebSocket.acceptOrResult[String, String] { request =>
+  def live(cid: String) = WebSocket.acceptOrResult[String, String] { request =>
     request.cookies.get("session_id") match {
       case Some(sid) =>
         println("worked")
@@ -102,11 +103,14 @@ class CampaignController @Inject() (
             case Some(usr) =>
               // on verified user
               println("user found " + usr.name)
-              // storing thing in the other thing
               Right(
                 // creating a child actorRef
                 ActorFlow.actorRef { out =>
-                  MyWebSocketActor.props(out)
+                  CampaignUserActor.props(
+                    out,
+                    // handling user and providing parent actor ref at the same time (insane tech)
+                    lobbyService.joinCampaign(cid, usr.userid)
+                  )
                 }
               )
             case None =>

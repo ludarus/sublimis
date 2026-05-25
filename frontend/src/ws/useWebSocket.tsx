@@ -28,8 +28,9 @@ const useWebSocket = (address: string) => {
 
 	}, []);
 
-	const sendMessage = useCallback(() => {
-		wsRef.current?.send("hello from the frontend")
+	const sendMessage = useCallback((msg: FormData) => {
+		const formStuff = msg.get("chat-msg")
+		wsRef.current?.send(String(formStuff ?? ""))
 	}, [])
 
 	return { messages, sendMessage }

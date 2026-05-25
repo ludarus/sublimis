@@ -2,6 +2,7 @@ package websocket
 
 import org.apache.pekko.actor._
 import scala.collection.immutable.Set
+import custom.Message
 
 //companion singleton object for helper methods & case classes
 object LiveCampaignActor {
@@ -30,8 +31,9 @@ class LiveCampaignActor() extends Actor {
 
     case Broadcast(message) =>
       println("actor broadcasting " + message)
+      // sending to each client
       clients.foreach { client =>
-        client ! message
+        client ! new Message(message, self)
       }
 
   }

@@ -1,5 +1,6 @@
 package websocket
 
+import custom.Message
 import org.apache.pekko.actor._
 import websocket.LiveCampaignActor
 
@@ -29,8 +30,8 @@ class CampaignUserActor(out: ActorRef, parent: ActorRef) extends Actor {
       parent ! Broadcast(msg)
 
     // on message from parent
-    case msg =>
+    case msg: Message =>
       // sending message back to client
-      out ! msg.toString()
+      out ! msg.payload
   }
 }

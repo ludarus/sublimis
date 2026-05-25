@@ -62,10 +62,24 @@ class LettuceConnection @Inject() (
     }(redisExecutionContext)
   }
 
-  def setOwner(uid: String, cid: UUID) = {
+  // gets the owner of the specified campaign
+  def getOwner(cid: String): Future[String] = {
     Future {
-      // gen new uuid. the chances of one matching an already existing cid are so low im not even going to check for it (even tho i did for the sessionids)
-      
+      commands.get(s"lobbies:${cid}:owner")
+    }(redisExecutionContext)
+  }
+
+  def addPlayer(cid: String, uid: String) = {
+    Future {
+      commands.rpush(s"lobbies:${cid}:players", uid)
+      commands.publish(s"lobbies:${cid}:events", "player-added")
+    }(redisExecutionContext)
+  }
+
+  // sets the owner of the specified campaign
+  def setOwner(cid: UUID, uid: String) = {
+    Future {
+
       // setting the creator to be the user's id
       commands.set(s"lobbies:${cid}:owner", uid)
 

@@ -6,8 +6,8 @@ GET /createLiveCampaign controllers.CampaignController.createLiveCampaign()
 # echo for testing 
 GET /ws controllers.CampaignController.echo
 
-#LIVE CAMPAIGN WEBSOCKET ENDPOINT, info passed in request?
-GET /live controllers.CampaignController.live
+#LIVE CAMPAIGN WEBSOCKET ENDPOINT, info passed in request
+GET /live/:cid controllers.CampaignController.live(cid)
 
 # logging out endpoint
 GET /logout controllers.LoginController.logout()
