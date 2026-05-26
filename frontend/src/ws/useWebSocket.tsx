@@ -1,11 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 
-const useWebSocket = (address: string) => {
+export default function useWebSocket(address: string, enabled: boolean) {
 	const wsRef = useRef<WebSocket | null>(null)
 	const [messages, setMessages] = useState<String[]>([]);
-	// const [readyState, setReadyState] = useState(WebSocket.CLOSED)
 
+	// automatically opens websocket connection
 	useEffect(() => {
+		if (!enabled) {
+			return;
+		}
+
+
 		const newSocket = new WebSocket(address)
 		wsRef.current = newSocket;
 
@@ -26,7 +31,7 @@ const useWebSocket = (address: string) => {
 			newSocket.close()
 		}
 
-	}, []);
+	}, [enabled]);
 
 	const sendMessage = useCallback((msg: FormData) => {
 		const formStuff = msg.get("chat-msg")
@@ -34,7 +39,4 @@ const useWebSocket = (address: string) => {
 	}, [])
 
 	return { messages, sendMessage }
-
 }
-
-export default useWebSocket;

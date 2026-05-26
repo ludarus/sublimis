@@ -7,25 +7,14 @@ import D20 from '../3d/Model.tsx'
 import NavBar from './Nav.tsx'
 
 import type { SublimisUser } from '../types/SublimisUser.tsx'
-// import Spam from './tools/Spam.tsx'
+import FetchData from '../auth/FetchData.tsx'
 
 
 export default function Home() {
 	const [userInfo, setInfo] = useState<SublimisUser | null>(null)
 
 	useEffect(() => {
-		const fetchData = async () => {
-			const res = await fetch(
-				'http://localhost:9000/getUserInfo',
-				{
-					method: 'GET',
-					credentials: 'include'
-				}
-			)
-			setInfo(await res.json())
-		};
-
-		fetchData();
+		FetchData(setInfo)
 	}, []); // runs once on page load
 
 	return (

@@ -68,12 +68,12 @@ class LoginController @Inject() (
               )
             case None =>
               println("user not found")
-              BadRequest("failed to verify")
+              Unauthorized("failed to verify")
           }
         }
       case None =>
         println("no cookie sent")
-        Future.successful(BadRequest("no cookie sent"))
+        Future.successful(Unauthorized("no cookie sent"))
     }
   }
 
@@ -89,7 +89,7 @@ class LoginController @Inject() (
         }
       case None =>
         println("no cookie sent")
-        Future.successful(BadRequest("no cookie sent"))
+        Future.successful(Unauthorized("no cookie sent"))
     }
   }
 
@@ -137,13 +137,13 @@ class LoginController @Inject() (
         } catch {
           case _: Throwable =>
             println("error foo")
-            Future.successful(BadRequest("invalid cred"))
+            Future.successful(Unauthorized("invalid cred"))
         }
 
       case None =>
         println("something is seriously wrong lool")
 
-        Future.successful(BadRequest("missing cred"))
+        Future.successful(Unauthorized("missing cred"))
     }
   }
 

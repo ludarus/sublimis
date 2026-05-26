@@ -59,12 +59,12 @@ class CampaignController @Inject() (
 
             case None =>
               println("user not found")
-              Future.successful(BadRequest("failed to verify"))
+              Future.successful(Unauthorized("failed to verify"))
           }
         }
       case None =>
         println("no cookie sent")
-        Future.successful(BadRequest("no cookie sent"))
+        Future.successful(Unauthorized("no cookie sent"))
     }
   }
 
