@@ -6,6 +6,8 @@ version := "1.0-SNAPSHOT"
 libraryDependencies += filters
 libraryDependencies += jdbc
 
+// idle websocket connection timeouts and stuff
+PlayKeys.devSettings += "play.server.websocket.periodic-keep-alive-max-idle" -> "10 seconds"
 
 // build.sbt
 

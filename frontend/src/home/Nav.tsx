@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin, type CredentialResponse } from '@react-oauth/google'
 import Scroll, { ScrollElement } from '../cool/Scroll.tsx'
-import type { SublimisUser } from '../sys/SublimisUser.tsx'
+import type { SublimisUser } from '../types/SublimisUser.tsx'
 
 import "./Nav.css"
 
@@ -49,20 +50,31 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 			>
 				{userInfo ?
 					//signed in
-					<Scroll title={userInfo.name} pic={userInfo.img} >
-						<ScrollElement>
-							settings
-						</ScrollElement>
-						<ScrollElement>
-							other stuff
-						</ScrollElement>
-						<ScrollElement>
-							thingies
-						</ScrollElement>
-						<ScrollElement>
-							<p onClick={googleLogout}>logout</p>
-						</ScrollElement>
-					</Scroll>
+					<div>
+
+				{
+						// <div className="navbar-element">
+						// 	<Link id="explore-button" className="quicklink" to={`../explore`}>Explore</Link>
+						// </div>
+				}
+
+						<div className="navbar-element">
+							<Scroll title={userInfo.name} pic={userInfo.img} >
+								<ScrollElement>
+									settings
+								</ScrollElement>
+								<ScrollElement>
+									other stuff
+								</ScrollElement>
+								<ScrollElement>
+									thingies
+								</ScrollElement>
+								<ScrollElement>
+									<p onClick={googleLogout}>logout</p>
+								</ScrollElement>
+							</Scroll>
+						</div>
+					</div>
 					:
 					//not signed in
 					<GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>

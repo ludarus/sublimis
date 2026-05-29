@@ -1,4 +1,5 @@
 //abstraction layer to interface with the redis cache/db
+// maybe remove this layer and implement lettuce directly into the live campaign service? We don't actually call lc in the controller
 
 package database
 

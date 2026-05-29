@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useState } from 'react'
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
 import type { LiveCampaign } from '../types/LiveCampaign'
 
@@ -47,7 +48,21 @@ export default function Expore() {
 		<div id="root-container-expore">
 			<h1>active campaigns right now:</h1>
 			{
-				liveCampaigns ? <div>{liveCampaigns.cids[0] ? liveCampaigns.cids : "there are no active campaigns right now"}</div> : <p>...</p>
+				liveCampaigns ? <div>{liveCampaigns.cids[0] ?
+
+					<ul>
+						{liveCampaigns.cids.map((cid) => (
+							<li key={cid}>
+
+								<Link to={`../live/${cid}`}> {cid}</Link>
+
+							</li>
+						))}
+					</ul>
+
+					:
+
+					"there are no active campaigns right now"}</div> : <p>...</p>
 			}
 
 			<br />
@@ -55,6 +70,6 @@ export default function Expore() {
 			<button onClick={handleClick} className='border-2 rounded-2xl'>
 				<h1>create new campaign</h1>
 			</button>
-		</div>
+		</div >
 	)
 }

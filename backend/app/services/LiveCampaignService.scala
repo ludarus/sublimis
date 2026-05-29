@@ -30,7 +30,10 @@ class LiveCampaignService @Inject() (
     lc.setOwner(cid, uid)
 
     val lobbyActor =
-      system.actorOf(LiveCampaignActor.props(), s"lobbies:${cid.toString()}")
+      system.actorOf(
+        LiveCampaignActor.props(cid.toString(), this),
+        s"lobbies:${cid.toString()}"
+      )
 
     // mapping the cid to the actor object
     lobbyRegistry(cid.toString()) = lobbyActor
@@ -58,4 +61,7 @@ class LiveCampaignService @Inject() (
     // returning the parent actor
     lobbyRegistry(cid)
   }
+
+  def leaveCampaign(cid: String, uid: String) = {}
+
 }

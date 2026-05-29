@@ -21,7 +21,6 @@ import websocket.CampaignUserActor
 
 class CampaignController @Inject() (
     cc: ControllerComponents,
-    lc: LettuceConnection,
     pg: ScalaJdbcConnection,
     lobbyService: LiveCampaignService,
     config: Configuration
@@ -45,10 +44,6 @@ class CampaignController @Inject() (
           option match {
             case Some(usr) =>
               println("user found " + usr.name)
-              // UNIT GOES HERE
-              lc.ping()
-
-              // UNIT ENDS
               Future.successful(
                 Created(
                   Json.obj(
@@ -90,7 +85,6 @@ class CampaignController @Inject() (
   }
 
   // verify before accepting ws request
-  // TODO i really need to make a nice wrapper function around this verification flow becauase it's killing me
   def live(cid: String) = WebSocket.acceptOrResult[String, String] { request =>
     request.cookies.get("session_id") match {
       case Some(sid) =>
@@ -103,16 +97,24 @@ class CampaignController @Inject() (
             case Some(usr) =>
               // on verified user
               println("user found " + usr.name)
-              Right(
-                // creating a child actorRef
-                ActorFlow.actorRef { out =>
-                  CampaignUserActor.props(
-                    out,
-                    // handling user and providing parent actor ref at the same time (insane tech)
-                    lobbyService.joinCampaign(cid, usr.userid)
-                  )
-                }
-              )
+              // if campaign exists:
+              if (lobbyService.lobbyRegistry.contains(cid)) {
+                Right(
+                  // creating a child actorRef
+                  // TODO check if cid exists in the first place
+                  ActorFlow.actorRef { out =>
+                    CampaignUserActor.props(
+                      out,
+                      // handling user and providing parent actor ref at the same time (insane tech)
+                      lobbyService.joinCampaign(cid, usr.userid),
+                      usr.userid
+                    )
+                  }
+                )
+              } else {
+                println("campaign dne")
+                Left(Unauthorized("campaign DNE"))
+              }
             case None =>
               println("user not found")
               Left(Forbidden)
