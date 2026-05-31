@@ -70,6 +70,20 @@ class LettuceConnection @Inject() (
     }(redisExecutionContext)
   }
 
+  def removePlayer(cid: String, uid: String) = {
+    Future {
+      commands.lrem(s"lobbies:${cid}:players", 0, uid)
+      commands.publish(s"lobbies:${cid}:events", "player-removed")
+    }(redisExecutionContext)
+  }
+
+  def removeCampaign(cid: String) = {
+    Future {
+      commands.del(s"lobbies:${cid}:players")
+      commands.publish(s"lobbies:${cid}:events", "campaign-removed")
+    }(redisExecutionContext)
+  }
+
   def addPlayer(cid: String, uid: String) = {
     Future {
       commands.rpush(s"lobbies:${cid}:players", uid)

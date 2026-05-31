@@ -19,11 +19,11 @@ class CampaignUserActor(out: ActorRef, parent: ActorRef, uid: String)
 
   // ideally make a service call from within the ws actor to directly update the redis, but this seems like a bad idea in practice
   override def preStart(): Unit = {
-    parent ! Join(self)
+    parent ! Join(self, uid)
   }
 
   override def postStop(): Unit = {
-    parent ! Leave(self)
+    parent ! Leave(self, uid)
   }
 
   override def toString(): String = {

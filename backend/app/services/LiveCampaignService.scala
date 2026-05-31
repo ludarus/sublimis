@@ -62,6 +62,17 @@ class LiveCampaignService @Inject() (
     lobbyRegistry(cid)
   }
 
-  def leaveCampaign(cid: String, uid: String) = {}
+  // TOO MUCH ABSTRACTION. COMBINE LETTUCECONNECTION AND THIS CLASS??
+  // called on websocket disconnection
+  def removePlayer(cid: String, uid: String) = {
+    lc.removePlayer(cid, uid)
+  }
+
+  // called on final player websocket disconnection
+  def removeCampaign(cid: String) = {
+    //TODO only remove the campaign afrer 5 minutes of no players?
+    println("removing campaign " + cid)
+    lc.removeCampaign(cid)
+  }
 
 }

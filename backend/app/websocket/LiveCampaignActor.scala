@@ -13,8 +13,8 @@ object LiveCampaignActor {
   )
 
   // case classes are public and immutable. used for sending signals between the actorRefs
-  case class Join(user: ActorRef)
-  case class Leave(user: ActorRef)
+  case class Join(user: ActorRef, uid: String)
+  case class Leave(user: ActorRef, uid: String)
   case class Broadcast(message: String)
 }
 
@@ -30,19 +30,31 @@ class LiveCampaignActor(cid: String, service: LiveCampaignService)
   var clients = Set.empty[ActorRef]
 
   def receive = {
-    case Join(user) =>
+    case Join(user, uid) =>
       println("adding user to actor")
       clients += user
-
+      clients.foreach { client =>
+        client ! new Message(uid + " has joined", self)
+      }
     // should tell service that user has left so it can interface with redis and such
-    case Leave(user) =>
+    case Leave(user, uid) =>
       clients -= user
       // broadcasting message
       clients.foreach { client =>
         client ! new Message(user.toString() + " has left", self)
       }
       println("removing user from actor")
-    // service.
+
+      // updating redis information
+      service.removePlayer(cid, uid)
+
+      // checking if there's no users left, then closing the game automatically
+      if (clients.size == 0) {
+        // updating redis information
+        service.removeCampaign(cid)
+        // kills actor
+        self ! PoisonPill
+      }
 
     case Broadcast(message) =>
       println("actor broadcasting " + message)

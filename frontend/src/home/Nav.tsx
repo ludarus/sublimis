@@ -58,7 +58,6 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 						// </div>
 				}
 
-						<div className="navbar-element">
 							<Scroll title={userInfo.name} pic={userInfo.img} >
 								<ScrollElement>
 									settings
@@ -73,7 +72,6 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 									<p onClick={googleLogout}>logout</p>
 								</ScrollElement>
 							</Scroll>
-						</div>
 					</div>
 					:
 					//not signed in
