@@ -28,7 +28,6 @@ class CampaignController @Inject() (
     system: ActorSystem,
     mat: Materializer
 ) extends AbstractController(cc) {
-
   implicit val ec: scala.concurrent.ExecutionContext =
     scala.concurrent.ExecutionContext.global
   // ======================== ACTION CONTROLLER METHODS ========================
@@ -107,13 +106,13 @@ class CampaignController @Inject() (
                       out,
                       // handling user and providing parent actor ref at the same time (insane tech)
                       lobbyService.joinCampaign(cid, usr.userid),
-                      usr.userid
+                      usr
                     )
                   }
                 )
               } else {
                 println("campaign dne")
-                Left(Unauthorized("campaign DNE"))
+                Left(NotFound("campaign DNE"))
               }
             case None =>
               println("user not found")

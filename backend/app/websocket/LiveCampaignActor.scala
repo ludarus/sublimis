@@ -2,8 +2,9 @@ package websocket
 
 import org.apache.pekko.actor._
 import scala.collection.immutable.Set
-import custom.Message
+import custom.ChatMessage
 import services.LiveCampaignService
+import custom.SublimisUser
 
 //companion singleton object for helper methods & case classes
 object LiveCampaignActor {
@@ -13,9 +14,9 @@ object LiveCampaignActor {
   )
 
   // case classes are public and immutable. used for sending signals between the actorRefs
-  case class Join(user: ActorRef, uid: String)
-  case class Leave(user: ActorRef, uid: String)
-  case class Broadcast(message: String)
+  case class Join(actor: ActorRef, user: SublimisUser)
+  case class Leave(actor: ActorRef, user: SublimisUser)
+  case class Broadcast(message: ChatMessage)
 }
 
 //should store cid? MAYBE. This would defeat the purpose of a map? No it wouldn't because the map is optimized for searching.
@@ -30,23 +31,23 @@ class LiveCampaignActor(cid: String, service: LiveCampaignService)
   var clients = Set.empty[ActorRef]
 
   def receive = {
-    case Join(user, uid) =>
+    case Join(actor, user) =>
       println("adding user to actor")
-      clients += user
+      clients += actor
       clients.foreach { client =>
-        client ! new Message(uid + " has joined", self)
+        client ! new ChatMessage(user.name + " has joined", self, user)
       }
     // should tell service that user has left so it can interface with redis and such
-    case Leave(user, uid) =>
-      clients -= user
+    case Leave(actor, user) =>
+      clients -= actor
       // broadcasting message
       clients.foreach { client =>
-        client ! new Message(user.toString() + " has left", self)
+        client ! new ChatMessage(user.name + " has left", self, user)
       }
       println("removing user from actor")
 
       // updating redis information
-      service.removePlayer(cid, uid)
+      service.removePlayer(cid, user.userid)
 
       // checking if there's no users left, then closing the game automatically
       if (clients.size == 0) {
@@ -57,10 +58,10 @@ class LiveCampaignActor(cid: String, service: LiveCampaignService)
       }
 
     case Broadcast(message) =>
-      println("actor broadcasting " + message)
+      println("actor broadcasting " + message.payload)
       // sending to each client
       clients.foreach { client =>
-        client ! new Message(message, self)
+        client ! message
       }
 
   }

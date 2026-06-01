@@ -71,8 +71,8 @@ class LiveCampaignService @Inject() (
   // called on final player websocket disconnection
   def removeCampaign(cid: String) = {
     //TODO only remove the campaign afrer 5 minutes of no players?
-    println("removing campaign " + cid)
     lc.removeCampaign(cid)
+    println("removing campaign " + cid)
   }
 
 }

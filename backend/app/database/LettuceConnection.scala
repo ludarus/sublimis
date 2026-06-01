@@ -81,6 +81,7 @@ class LettuceConnection @Inject() (
     Future {
       commands.del(s"lobbies:${cid}:players")
       commands.publish(s"lobbies:${cid}:events", "campaign-removed")
+      println("removed the campaign")
     }(redisExecutionContext)
   }
 

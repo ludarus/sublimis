@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import type { ChatMessage } from '../types/ChatMessage';
 
 export default function useWebSocket(address: string, enabled: boolean) {
 	const wsRef = useRef<WebSocket | null>(null)
-	const [messages, setMessages] = useState<string[]>([]);
+	const [messages, setMessages] = useState<ChatMessage[]>([]);
 	// const [readyState, setReadyState] = useState<WebSocket["readyState"]>(WebSocket.CONNECTING)
 
 	// automatically opens websocket connection
@@ -26,14 +27,19 @@ export default function useWebSocket(address: string, enabled: boolean) {
 
 		newSocket.onmessage = (event) => {
 			// console.log("recieved message " + event.data as string)
-			setMessages((prevMessages) => [...prevMessages, event.data as string])
+			try {
+				const data: ChatMessage = JSON.parse(event.data as string)
+				setMessages((prevMessages) => [...prevMessages, data])
+			} catch (error) {
+				console.error(error)
+			}
 		}
 
 		newSocket.onclose = (event) => {
 			console.log("closed", {
 				code: event.code,
 				reason: event.reason,
-				wasClean: event.wasClean,
+				wasClean: event.wasClean
 			})
 
 			switch (event.code) {

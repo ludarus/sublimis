@@ -40,8 +40,8 @@ export default function Live() {
 							<ul>
 								{
 									messages.map((msg) => (
-										<li key={msg}>
-											[time] [user]: {msg}
+										<li key={Number(msg.time)}>
+											[{msg.name}] [{new Date(Number(msg.time)).toLocaleTimeString()}]: {msg.payload}
 										</li>
 									))
 								}
