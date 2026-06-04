@@ -46,8 +46,8 @@ class LoginController @Inject() (
     .build();
 
   // ======================== HELPER METHODS ========================
-  def verifyRequest(request: Request[AnyContent]) = { 
-    //TODO REFACTOR THE COOKIE AND USER VERIFICATION INTO A HELPER FUNCTION
+  def verifyRequest(request: Request[AnyContent]) = {
+    // TODO REFACTOR THE COOKIE AND USER VERIFICATION INTO A HELPER FUNCTION
 
   }
   // ======================== ACTION CONTROLLER METHODS ========================
@@ -68,12 +68,12 @@ class LoginController @Inject() (
               )
             case None =>
               println("user not found")
-              Unauthorized("failed to verify")
+              Unauthorized(Json.obj("error" -> "failed to verify"))
           }
         }
       case None =>
         println("no cookie sent")
-        Future.successful(Unauthorized("no cookie sent"))
+        Future.successful(Unauthorized(Json.obj("error" -> "no cookie sent")))
     }
   }
 
@@ -131,19 +131,19 @@ class LoginController @Inject() (
               )
           }.recover { case exception =>
             println("failed to retrieve sid " + exception)
-            InternalServerError("failed to retrieve sid")
+            InternalServerError(Json.obj("error" -> "failed to retrieve sid"))
           }
 
         } catch {
           case _: Throwable =>
             println("error foo")
-            Future.successful(Unauthorized("invalid cred"))
+            Future.successful(Unauthorized(Json.obj("error" -> "invalid cred")))
         }
 
       case None =>
         println("something is seriously wrong lool")
 
-        Future.successful(Unauthorized("missing cred"))
+        Future.successful(Unauthorized(Json.obj("error" -> "missing cred")))
     }
   }
 

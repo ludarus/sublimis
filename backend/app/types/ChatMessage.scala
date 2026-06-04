@@ -1,20 +1,21 @@
 package custom
 
+import custom.WsMessage
 import org.apache.pekko.actor._
 import custom.SublimisUser
 import java.sql.Timestamp
 import play.api.libs.json._
 
-//wrapper class around message
 class ChatMessage(
-    val payload: String,
+    payload: String,
+    msgType: Short,
     val origin: ActorRef,
     val author: SublimisUser
-) {
-  val time: Timestamp = new Timestamp(System.currentTimeMillis())
+) extends WsMessage(payload, msgType) {
 
-  def getJson(): JsObject = {
+  override def getJson(): JsObject = {
     Json.obj(
+      "type" -> msgType,
       "name" -> author.name,
       "img" -> author.img,
       "userid" -> author.userid,
@@ -22,4 +23,5 @@ class ChatMessage(
       "payload" -> payload
     )
   }
+
 }

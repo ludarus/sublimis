@@ -1,4 +1,5 @@
 export type SublimisUser = {
+	type: number
 	email: string
 	name: string
 	img: string

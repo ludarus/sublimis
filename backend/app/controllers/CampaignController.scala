@@ -18,6 +18,8 @@ import scala.util.Failure
 import scala.util.Success
 import services.LiveCampaignService
 import websocket.CampaignUserActor
+import org.apache.pekko.actor.PoisonPill
+import play.http.websocket.Message.Close
 
 class CampaignController @Inject() (
     cc: ControllerComponents,
@@ -79,11 +81,11 @@ class CampaignController @Inject() (
   // test echo func
   def echo = WebSocket.accept[String, String] { request =>
     println("connection activated")
-    // log the message to stdout and send response back to client
     ActorFlow.actorRef { out => MyWebSocketActor.props(out) }
   }
 
   // verify before accepting ws request
+  // TODO: WHEN IMPLEMENTING CRSF, FOLLOW INSTRUCTIONS HERE: https://www.playframework.com/documentation/3.0.x/ScalaWebSockets#Rejecting-a-WebSocket
   def live(cid: String) = WebSocket.acceptOrResult[String, String] { request =>
     request.cookies.get("session_id") match {
       case Some(sid) =>
@@ -112,11 +114,40 @@ class CampaignController @Inject() (
                 )
               } else {
                 println("campaign dne")
-                Left(NotFound("campaign DNE"))
+                // Left(NotFound("campaign DNE"))
+                // sending a single close frame with error code info because the browser doesn't expose error codes on websocket rejection
+                Right(
+                  Flow.fromSinkAndSource(
+                    Sink.ignore,
+                    Source.single(
+                      Json
+                        .obj(
+                          "type" -> 0,
+                          "payload" -> "campaign does not exist",
+                          "error" -> 404
+                        )
+                        .toString
+                    )
+                  )
+                )
               }
             case None =>
               println("user not found")
-              Left(Forbidden)
+              // Left(Forbidden)
+              Right(
+                Flow.fromSinkAndSource(
+                  Sink.ignore,
+                  Source.single(
+                    Json
+                      .obj(
+                        "type" -> 0,
+                        "payload" -> "user not found",
+                        "error" -> 401
+                      )
+                      .toString
+                  )
+                )
+              )
           }
         }
       case None =>

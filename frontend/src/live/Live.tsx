@@ -19,7 +19,13 @@ export default function Live() {
 		FetchData(setInfo);
 	}, []); // runs once on page load
 
-	const { messages, sendMessage, wsRef } = useWebSocket(`ws://localhost:9000/live/${campaignId}`, userInfo !== null)
+	const { messages, sendMessage, ready, error } = useWebSocket(`ws://localhost:9000/live/${campaignId}`, userInfo !== null)
+
+	if (!ready) {
+		return (
+			<p>Loading...</p>
+		)
+	}
 
 	return (
 		<div id="base-container-live" className="border">
@@ -30,30 +36,41 @@ export default function Live() {
 
 					{userInfo ?
 						// user logged in
-						<div>
+						(
+							<div>
+								{error ?
+									(<p> error: {error} </p>)
+									:
+									(<div>
 
-							<h1>{campaignId}</h1> <p>{wsRef.current ? wsRef.current.readyState : ""}</p>
-							<form action={sendMessage}>
-								<input type="text" className="border-2" id="chat-box" name="chat-msg" />
-							</form>
+										<h1>{campaignId}</h1>
+										{/*	<p>{wsRef.current ? wsRef.current.readyState : ""}</p>*/}
+										<form action={sendMessage}>
+											<input type="text" className="border-2" id="chat-box" name="chat-msg" />
+										</form>
 
-							<ul>
-								{
-									messages.map((msg) => (
-										<li key={Number(msg.time)}>
-											[{msg.name}] [{new Date(Number(msg.time)).toLocaleTimeString()}]: {msg.payload}
-										</li>
-									))
+										<ul>
+											{
+												messages.map((msg) => (
+													<li key={Number(msg.time)}>
+														[{msg.name}] [{new Date(Number(msg.time)).toLocaleTimeString()}]: {msg.payload}
+													</li>
+												))
+											}
+										</ul>
+
+									</div>
+									)
 								}
-							</ul>
-
-						</div>
-
+							</div>
+						)
 						:
-						//user not logged in
-						<div>
-							please log in to access this campaign
-						</div>
+						(
+							//user not logged in
+							<div>
+								please log in to access this campaign
+							</div>
+						)
 					}
 				</div>
 				<div id="game-container" className="border">

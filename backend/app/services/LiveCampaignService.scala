@@ -72,7 +72,9 @@ class LiveCampaignService @Inject() (
   def removeCampaign(cid: String) = {
     //TODO only remove the campaign afrer 5 minutes of no players?
     lc.removeCampaign(cid)
+    lobbyRegistry.remove(cid)
     println("removing campaign " + cid)
+
   }
 
 }

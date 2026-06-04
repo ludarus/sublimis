@@ -12,13 +12,21 @@ export default async function fetchData(setInfo: Dispatch<SetStateAction<Sublimi
 			}
 		)
 
-		if (res.status === 401) {
-			console.log("not logged in")
+		//checking result status
+		if (!res.ok) {
+			if (res.status === 401) {
+				console.log("Not logged in");
+				setInfo(null);
+				return;
+			}
+
+			console.log(`Request failed with status ${res.status}`);
 			setInfo(null);
 			return;
 		}
+
 		setInfo(await res.json())
-		console.log("usesr logged in " )
+		console.log("usesr logged in ")
 	} catch (error) {
 		console.error(error)
 	}

@@ -35,14 +35,14 @@ class LiveCampaignActor(cid: String, service: LiveCampaignService)
       println("adding user to actor")
       clients += actor
       clients.foreach { client =>
-        client ! new ChatMessage(user.name + " has joined", self, user)
+        client ! new ChatMessage(user.name + " has joined", 1, self, user)
       }
     // should tell service that user has left so it can interface with redis and such
     case Leave(actor, user) =>
       clients -= actor
       // broadcasting message
       clients.foreach { client =>
-        client ! new ChatMessage(user.name + " has left", self, user)
+        client ! new ChatMessage(user.name + " has left", 1, self, user)
       }
       println("removing user from actor")
 
