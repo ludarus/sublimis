@@ -11,7 +11,7 @@ import FetchData from '../auth/FetchData.tsx'
 
 
 export default function Home() {
-	const [userInfo, setInfo] = useState<SublimisUser | null>(null)
+	const [userInfo, setInfo] = useState<SublimisUser | boolean>(true)
 
 	useEffect(() => {
 		FetchData(setInfo)

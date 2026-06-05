@@ -6,6 +6,7 @@
 	flex-direction: row;
 	z-index: 2;
 	background-color: var(--accent-bg);
+	height: 6em;
 }
 
 .navbar-element {

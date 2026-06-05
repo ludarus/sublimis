@@ -85,7 +85,10 @@ export default function useWebSocket(address: string, enabled: boolean) {
 
 	const sendMessage = useCallback((msg: FormData) => {
 		const formStuff = msg.get("chat-msg")
-		wsRef.current?.send(String(formStuff ?? ""))
+		if (formStuff === "") {
+			return
+		}
+		wsRef.current?.send(String(formStuff))
 	}, [])
 
 	return { messages, sendMessage, ready, error }

@@ -8,8 +8,8 @@ import "./Nav.css"
 
 
 export type NavBarProps = {
-	userInfo: SublimisUser | null,
-	setInfo: React.Dispatch<React.SetStateAction<SublimisUser | null>>
+	userInfo: SublimisUser | boolean,
+	setInfo: React.Dispatch<React.SetStateAction<SublimisUser | boolean>>
 }
 
 export default function NavBar({ userInfo, setInfo }: NavBarProps) {
@@ -35,7 +35,7 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 			credentials: 'include'
 		}
 		)
-		setInfo(null)
+		setInfo(false)
 	}
 
 
@@ -48,30 +48,30 @@ export default function NavBar({ userInfo, setInfo }: NavBarProps) {
 			<div
 				className='navbar-element'
 			>
-				{userInfo ?
+				{typeof userInfo !== 'boolean' ?
 					//signed in
 					<div>
 
-				{
-						// <div className="navbar-element">
-						// 	<Link id="explore-button" className="quicklink" to={`../explore`}>Explore</Link>
-						// </div>
-				}
+						{
+							// <div className="navbar-element">
+							// 	<Link id="explore-button" className="quicklink" to={`../explore`}>Explore</Link>
+							// </div>
+						}
 
-							<Scroll title={userInfo.name} pic={userInfo.img} >
-								<ScrollElement>
-									settings
-								</ScrollElement>
-								<ScrollElement>
-									other stuff
-								</ScrollElement>
-								<ScrollElement>
-									thingies
-								</ScrollElement>
-								<ScrollElement>
-									<p onClick={googleLogout}>logout</p>
-								</ScrollElement>
-							</Scroll>
+						<Scroll title={userInfo.name} pic={userInfo.img} >
+							<ScrollElement>
+								settings
+							</ScrollElement>
+							<ScrollElement>
+								other stuff
+							</ScrollElement>
+							<ScrollElement>
+								thingies
+							</ScrollElement>
+							<ScrollElement>
+								<p onClick={googleLogout}>logout</p>
+							</ScrollElement>
+						</Scroll>
 					</div>
 					:
 					//not signed in

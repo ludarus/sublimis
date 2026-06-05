@@ -64,7 +64,7 @@ class CampaignController @Inject() (
     }
   }
 
-  def giveLiveCampaigns = Action {
+  def giveLiveCampaigns = Action { request => 
     // user verification not needed on this, because browsing public campaigns should be fine
     println("giving live info")
     val cids = lobbyService.lobbyRegistry.keys.toArray
