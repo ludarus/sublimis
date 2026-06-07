@@ -13,3 +13,4 @@ export interface ChatMessage extends WsMessage {
 export interface ErrorMessage extends WsMessage {
 	error: number
 }
+

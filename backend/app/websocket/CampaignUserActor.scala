@@ -15,32 +15,44 @@ object CampaignUserActor {
   )
 }
 
-class CampaignUserActor(out: ActorRef, parent: ActorRef, user: SublimisUser)
-    extends Actor {
+class CampaignUserActor(
+    val out: ActorRef,
+    val parent: ActorRef,
+    val user: SublimisUser
+) extends Actor {
   import LiveCampaignActor._
 
   // ideally make a service call from within the ws actor to directly update the redis, but this seems like a bad idea in practice
   override def preStart(): Unit = {
-    parent ! Join(self, user)
+    parent ! Join(this)
 
-    //tell frontend to display info
+    // tell frontend to display info
     out ! new WsMessage("ready!", 3).getJson().toString()
   }
 
   override def postStop(): Unit = {
-    parent ! Leave(self, user)
+    parent ! Leave(this)
+  }
+
+  def getActor(): ActorRef = {
+    self
   }
 
   def receive = {
 
     // on message from individual websocket connection
     case msg: String =>
-      parent ! Broadcast(new ChatMessage(msg, 1, self, user))
+      parent ! Broadcast(new ChatMessage(msg, self, user))
 
     // on message from parent
     case msg: ChatMessage =>
       // sending message back to client
       println(s"sending messgae ${msg.payload} back to user")
       out ! msg.getJson().toString()
+
+    case msg: WsMessage =>
+      println(s"sending websocket message to user")
+      out ! msg.getJson().toString()
+
   }
 }

@@ -1,10 +1,12 @@
 package websocket
 
+import play.api.libs.json._
 import org.apache.pekko.actor._
 import scala.collection.immutable.Set
 import custom.ChatMessage
 import services.LiveCampaignService
 import custom.SublimisUser
+import custom.WsMessage
 
 //companion singleton object for helper methods & case classes
 object LiveCampaignActor {
@@ -14,8 +16,8 @@ object LiveCampaignActor {
   )
 
   // case classes are public and immutable. used for sending signals between the actorRefs
-  case class Join(actor: ActorRef, user: SublimisUser)
-  case class Leave(actor: ActorRef, user: SublimisUser)
+  case class Join(actor: CampaignUserActor)
+  case class Leave(actor: CampaignUserActor)
   case class Broadcast(message: ChatMessage)
 }
 
@@ -23,31 +25,48 @@ object LiveCampaignActor {
 // im going to store cid
 
 //maybe put a reference to the service so it can call methods both ways?
+//  -insert something about circular references-
 
 class LiveCampaignActor(cid: String, service: LiveCampaignService)
     extends Actor {
   import LiveCampaignActor._
 
-  var clients = Set.empty[ActorRef]
+  // trying out tuples
+  var clients = Set.empty[CampaignUserActor]
 
   def receive = {
-    case Join(actor, user) =>
+    case Join(actor) =>
       println("adding user to actor")
-      clients += actor
+      clients += (actor)
       clients.foreach { client =>
-        client ! new ChatMessage(user.name + " has joined", 1, self, user)
+        // updating the client side playerlist
+        client.getActor ! new WsMessage(
+          // an array of the names of the users
+          Json.toJson(clients.toSeq.map(_.user.name).toArray).toString,
+          4
+        )
+        // TODO: make this into a server message not a user message
+        client.getActor ! new ChatMessage(
+          actor.user.name + " has joined",
+          self,
+          actor.user
+        )
       }
     // should tell service that user has left so it can interface with redis and such
-    case Leave(actor, user) =>
-      clients -= actor
+    case Leave(actor) =>
+      clients -= (actor)
       // broadcasting message
       clients.foreach { client =>
-        client ! new ChatMessage(user.name + " has left", 1, self, user)
+        client.getActor ! new ChatMessage(
+          actor.user.name + " has left",
+          self,
+          actor.user
+        )
       }
       println("removing user from actor")
 
       // updating redis information
-      service.removePlayer(cid, user.userid)
+      service.removePlayer(cid, actor.user.userid)
 
       // checking if there's no users left, then closing the game automatically
       if (clients.size == 0) {
@@ -59,9 +78,28 @@ class LiveCampaignActor(cid: String, service: LiveCampaignService)
 
     case Broadcast(message) =>
       println("actor broadcasting " + message.payload)
+      println(message.payload.length())
       // sending to each client
-      clients.foreach { client =>
-        client ! message
+      if (message.payload == "list") {
+        println("special messgae")
+        println(clients.toString)
+        clients.foreach { client =>
+          client.getActor ! new ChatMessage(
+            "Sending playerlist Now!",
+            self,
+            message.author
+          )
+
+          client.getActor ! new WsMessage(
+            // an array of the names of the users
+            Json.toJson(clients.toSeq.map(_.user.name).toArray).toString,
+            4
+          )
+        }
+      } else {
+        clients.foreach { client =>
+          client.getActor ! message
+        }
       }
 
   }

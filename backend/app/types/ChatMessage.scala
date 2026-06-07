@@ -8,10 +8,9 @@ import play.api.libs.json._
 
 class ChatMessage(
     payload: String,
-    msgType: Short,
     val origin: ActorRef,
     val author: SublimisUser
-) extends WsMessage(payload, msgType) {
+) extends WsMessage(payload, 1) {
 
   override def getJson(): JsObject = {
     Json.obj(

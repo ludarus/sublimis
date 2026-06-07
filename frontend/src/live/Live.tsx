@@ -7,6 +7,7 @@ import "./Live.css"
 import type { SublimisUser } from '../types/SublimisUser.tsx'
 import FetchData from '../auth/FetchData.tsx'
 import NavBar from '../home/Nav.tsx'
+import ChatContent from "./ChatContent.tsx";
 
 
 
@@ -22,7 +23,7 @@ export default function Live() {
 		FetchData(setInfo);
 	}, []); // runs once on page load
 
-	const { messages, sendMessage, ready, error } = useWebSocket(`ws://localhost:9000/live/${campaignId}`, userInfo !== null)
+	const { messages, sendMessage, ready, error, playerlist } = useWebSocket(`ws://localhost:9000/live/${campaignId}`, userInfo !== null)
 
 	if (!ready) {
 		console.log("returning loading")
@@ -49,7 +50,6 @@ export default function Live() {
 			)
 		}
 
-		console.log("returning basic")
 		return (
 			<div id="base-container-live" className="border">
 
@@ -58,13 +58,12 @@ export default function Live() {
 				</div>
 				<div id="root-container-live" className="border">
 					<motion.div id="chat-container" className="border-3 border-blue-500" animate={{ width: chatToggled ? "25vw" : "auto" }} transition={{ duration: 0.2, ease: "easeOut" }}>
-						{/*<h1>{campaignId}</h1>
-											<p>{wsRef.current ? wsRef.current.readyState : ""}</p>*/}
 
 						<motion.div id="chat-buttons" className="border"
 							animate={{ flexDirection: chatToggled ? "row" : "column" }}
 						>
 							{chatToggled ? (
+								//chat enabled
 								<button id="players-button"  >
 									<svg width="2.307em" height="2em" viewBox="0 0 991 859" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={() => setPlayerCountToggled(!playerCountToggled)}>
 										<path d="M78.2488 325.105L78.4974 324.962L159.297 464.911L110.8 492.911L30 352.962L30.2486 352.818L24.2487 287L78.2488 325.105ZM58.1699 350.554L112.57 444.777L116.727 442.377L62.3275 348.154L58.1699 350.554Z" fill="#6C6247" />
@@ -103,46 +102,14 @@ export default function Live() {
 							</button>
 						</motion.div>
 
-						{chatToggled ?
+						<ChatContent
+							chatToggled={chatToggled}
+							playerCountToggled={playerCountToggled}
+							messages={messages}
+							playerlist={playerlist}
+							sendMessage={sendMessage}
+						/>
 
-							(
-								<ul id="messages" className="border border-green-500" >
-									{
-										messages.map((msg) => (
-											<li className="message " key={Number(msg.time)}>
-												<div className="message-image">
-													<img className="rounded-full " src={msg.img} />
-												</div>
-												<div className="message-text">
-
-													<div className="message-headings">
-														<h2><b>{msg.name}</b></h2>
-
-														<h3>{new Date(Number(msg.time)).toLocaleTimeString()}</h3>
-													</div>
-													<p className="message-payload">
-														{msg.payload}
-													</p>
-												</div>
-											</li>
-										))
-									}
-								</ul>
-							)
-							:
-							<div />
-						}
-
-						{chatToggled ?
-							(
-								<form action={sendMessage} id="chat-form" >
-									<input type="text" className="border-2" id="chat-box" name="chat-msg" />
-								</form>
-
-							)
-							:
-							<div />
-						}
 					</motion.div>
 					<div id="game-container" className="border">
 						<div id="map-container" className="border">

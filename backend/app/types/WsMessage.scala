@@ -11,6 +11,7 @@ import play.api.libs.json._
 // 1 -> chat msg
 // 2 -> game event
 // 3 -> ready signal
+// 4 -> player list
 
 class WsMessage(
     val payload: String,
